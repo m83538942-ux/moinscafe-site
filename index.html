@@ -42,27 +42,6 @@ button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
 .container { width: min(1240px, 92%); margin: auto; }
 
-/* TOPBAR */
-.topbar {
-  background: #030306;
-  border-bottom: 1px solid var(--line-soft);
-  color: var(--muted);
-  font-size: 0.76rem;
-  letter-spacing: 0.06em;
-  padding: 9px 0;
-}
-.topbar .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.topbar-links {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
 .icon-badge {
   display: inline-flex;
   align-items: center;
@@ -886,17 +865,6 @@ button { cursor: pointer; }
 <body>
 
 <div id="toast" class="toast"></div>
-
-<!-- TOP INFO BAR (PHONE NUMBER HIDDEN, REPLACED WITH ICON BADGES) -->
-<div class="topbar">
-  <div class="container">
-    <span>📍 Kampala, Uganda • Open Daily 8:00 AM – 11:00 PM</span>
-    <div class="topbar-links">
-      <a href="tel:+256749632497" class="icon-badge call" title="Call Us">📞 Call Line</a>
-      <a href="https://wa.me/256749632497" target="_blank" rel="noopener" class="icon-badge wa" title="WhatsApp Us">💬 WhatsApp Chat</a>
-    </div>
-  </div>
-</div>
 
 <!-- STICKY HEADER WITH 3-LINE MENU ON TOP RIGHT -->
 <header class="nav">
