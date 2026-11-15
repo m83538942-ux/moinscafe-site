@@ -1,13 +1,12 @@
 <?php
 /* ============================================================
-   ONE-FILE SHOP — customer + admin + API + uploads + colors
-   Save as index.php on a PHP host. Open it, tap "Admin",
-   log in with the password below, change it, set colors.
+   ONE-FILE SHOP — public front + admin + API + colors
+   Admin password is fixed below. Front page is public.
    ============================================================ */
 
-\$DB_FILE      = __DIR__ . '/data/shop.sqlite';
-\$UPLOAD_DIR   = __DIR__ . '/data/uploads';
-\$DEFAULT_PASS = 'change-me-now';
+\$DB_FILE    = __DIR__ . '/data/shop.sqlite';
+\$UPLOAD_DIR = __DIR__ . '/data/uploads';
+\$ADMIN_PASS = '271024k';
 
 if (!is_dir(dirname($DB_FILE))) mkdir(dirname($DB_FILE), 0775, true);
 if (!is_dir($UPLOAD_DIR)) mkdir($UPLOAD_DIR, 0775, true);
@@ -20,8 +19,6 @@ $pdo = new PDO('sqlite:' . $DB_FILE);
 
 function gs(\$pdo,$k,$d=''){ $s=$pdo->prepare("SELECT v FROM settings WHERE k=?"); $s->execute([$k]); $r=$s->fetchColumn(); return $r===false?$d:\$r; }
 function ss(\$pdo,$k,$v){ \$pdo->prepare("INSERT INTO settings (k,v) VALUES (?,?) ON CONFLICT(k) DO UPDATE SET v=excluded.v")->execute([$k,$v]); }
-
-if (gs($pdo,'pass')==='') ss($pdo,'pass',password_hash(\$DEFAULT_PASS,PASSWORD_DEFAULT));
 
 session_start();
 $isAdmin = !empty($_SESSION['admin']);
@@ -42,8 +39,9 @@ if ($a==='img'){ $f=basename($_GET['f']??''); $p=$UPLOAD_DIR.'/'.$f;
 /* ---------- ADMIN ---------- */
 if ($a==='admin' || $a==='logout'){
   if(\$a==='logout'){ session_destroy(); header('Location: ?a=admin'); exit; }
+
   if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['login'])){
-    if(password_verify($_POST['pass'],gs($pdo,'pass'))) $_SESSION['admin']=true; else $err='Wrong password';
+    if(hash_equals($ADMIN_PASS,$_POST['pass'] ?? '')) $_SESSION['admin']=true; else $err='Wrong password';
     $isAdmin=!empty($_SESSION['admin']);
   }
   if(!\$isAdmin){ ?><!DOCTYPE html><meta name=viewport content="width=device-width,initial-scale=1">
@@ -59,7 +57,6 @@ if ($a==='admin' || $a==='logout'){
       ss($pdo,'c_accent',$_POST['c_accent']); ss($pdo,'c_accent2',$_POST['c_accent2']); ss($pdo,'c_btn',$_POST['c_btn']);
       \$msg='Saved';
     }
-    if(isset($_POST['passchange']) && $_POST['newpass']!==''){ ss($pdo,'pass',password_hash($_POST['newpass'],PASSWORD_DEFAULT)); \$msg='Password changed'; }
     if(isset($_POST['add'])) $pdo->prepare("INSERT INTO items (name,price,sort) VALUES (?,?,?)")->execute([trim($_POST['name']),(float)$_POST['price'],(int)\$_POST['sort']]);
     if(isset($_POST['save'])) $pdo->prepare("UPDATE items SET name=?,price=?,sort=? WHERE id=?")->execute([trim($_POST['name']),(float)$_POST['price'],(int)$_POST['sort'],(int)$_POST['id']]);
     if(isset($_POST['del'])){ $s=\$pdo->prepare("SELECT image FROM items WHERE id=?");$s->execute([(int)$_POST['id']]); if($f=$s->fetchColumn())@unlink($UPLOAD_DIR.'/'.$f); \$pdo->prepare("DELETE FROM items WHERE id=?")->execute([(int)\$_POST['id']]); }
@@ -76,4 +73,9 @@ if ($a==='admin' || $a==='logout'){
   $cur=gs($pdo,'currency','\$');
   $C=['bg'=>gs($pdo,'c_bg','#f5f5f7'),'card'=>gs($pdo,'c_card','#ffffff'),'text'=>gs($pdo,'c_text','#1c1c1e'),
       'accent'=>gs($pdo,'c_accent','#00e5ff'),'accent2'=>gs($pdo,'c_accent2','#ff2fd6'),'btn'=>gs(\$pdo,'c_btn','#25D366')];
-  ?><!DOCTYPE html><meta name=viewport
+  ?><!DOCTYPE html><meta name=viewport content="width=device-width,initial-scale=1"><title>Admin</title>
+  <style>
+    body{font-family:system-ui,sans-serif;max-width:780px;margin:20px auto;padding:0 14px;background:#f4f4f6;color:#111}
+    h2{margin-top:28px}
+    .box{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px;margin:12px 0}
+    .
