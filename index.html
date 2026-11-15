@@ -58,8 +58,39 @@ button { cursor: pointer; }
   gap: 12px;
   flex-wrap: wrap;
 }
-.topbar a { color: var(--cyan); font-weight: 700; }
-.topbar a:hover { color: var(--magenta); }
+.topbar-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.icon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.74rem;
+  transition: 0.2s;
+}
+.icon-badge.call {
+  background: var(--cyan-dim);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+}
+.icon-badge.call:hover {
+  background: var(--cyan);
+  color: #05070b;
+}
+.icon-badge.wa {
+  background: rgba(37, 211, 102, 0.15);
+  border: 1px solid #25d366;
+  color: #25d366;
+}
+.icon-badge.wa:hover {
+  background: #25d366;
+  color: #fff;
+}
 
 /* NAVIGATION */
 .nav {
@@ -111,7 +142,7 @@ button { cursor: pointer; }
 }
 .desktop-links a:hover { color: var(--cyan); }
 
-/* 3-LINES HAMBURGER MENU (ALWAYS VISIBLE ON TOP RIGHT) */
+/* 3-LINES HAMBURGER MENU */
 .menu-toggle {
   display: inline-flex;
   flex-direction: column;
@@ -140,7 +171,7 @@ button { cursor: pointer; }
 }
 .menu-toggle:hover span { background: var(--magenta); }
 
-/* DRAWER MENU UNDER TOP RIGHT 3 LINES */
+/* DRAWER MENU */
 .nav-drawer {
   position: fixed;
   top: 78px;
@@ -310,7 +341,7 @@ button { cursor: pointer; }
   margin: 0;
 }
 
-/* FULL MENU CAROUSEL (BLACK, CYAN & MAGENTA ACCENT) */
+/* FULL MENU CAROUSEL */
 .carousel-shell {
   background: linear-gradient(165deg, #0b0c13 0%, #06060a 100%);
   border: 1px solid var(--cyan);
@@ -519,7 +550,7 @@ button { cursor: pointer; }
   color: #fff;
 }
 
-/* FULL MENU GRID SECTION BELOW CAROUSEL */
+/* FULL MENU GRID SECTION */
 .menu-categories-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -618,6 +649,7 @@ button { cursor: pointer; }
   display: flex;
   gap: 14px;
   margin: 18px 0;
+  align-items: center;
 }
 .contact-icon {
   width: 42px;
@@ -855,11 +887,14 @@ button { cursor: pointer; }
 
 <div id="toast" class="toast"></div>
 
-<!-- TOP INFO BAR -->
+<!-- TOP INFO BAR (PHONE NUMBER HIDDEN, REPLACED WITH ICON BADGES) -->
 <div class="topbar">
   <div class="container">
     <span>📍 Kampala, Uganda • Open Daily 8:00 AM – 11:00 PM</span>
-    <span>Order / Call / WhatsApp: <a href="tel:+256749632497">+256 749 632 497</a></span>
+    <div class="topbar-links">
+      <a href="tel:+256749632497" class="icon-badge call" title="Call Us">📞 Call Line</a>
+      <a href="https://wa.me/256749632497" target="_blank" rel="noopener" class="icon-badge wa" title="WhatsApp Us">💬 WhatsApp Chat</a>
+    </div>
   </div>
 </div>
 
@@ -878,7 +913,7 @@ button { cursor: pointer; }
         <a href="#about">Our Vibe</a>
         <a href="#contact">Contact</a>
       </nav>
-      <a href="https://wa.me/256749632497" target="_blank" rel="noopener" class="btn" style="padding:10px 16px;font-size:0.76rem;">WhatsApp Order</a>
+      <a href="https://wa.me/256749632497" target="_blank" rel="noopener" class="icon-badge wa" style="padding:10px 16px;">💬 WhatsApp Order</a>
       <!-- TOP RIGHT 3 LINES BUTTON -->
       <button id="menuToggleBtn" class="menu-toggle" aria-label="Open Navigation & Admin Menu" aria-expanded="false">
         <span></span>
@@ -895,7 +930,8 @@ button { cursor: pointer; }
   <a href="#full-menu" onclick="closeDrawer()">🍔 Complete Cafe Menu</a>
   <a href="#about" onclick="closeDrawer()">✨ About Moin's Cafe</a>
   <a href="#contact" onclick="closeDrawer()">📞 Location & Contact</a>
-  <a href="tel:+256749632497" onclick="closeDrawer()">📲 Call +256 749 632 497</a>
+  <a href="https://wa.me/256749632497" target="_blank" rel="noopener" onclick="closeDrawer()">💬 WhatsApp Chat</a>
+  <a href="tel:+256749632497" onclick="closeDrawer()">📞 Call Kitchen</a>
   <div class="drawer-divider"></div>
   <button id="openAdminDrawerBtn" class="admin-trigger" type="button">
     <span>⚡ Admin Panel</span>
@@ -911,7 +947,7 @@ button { cursor: pointer; }
     <p>Freshly smashed burgers, crispy loaded fries, flame-grilled chicken, and cold-pressed tropical juices — crafted fresh to order in Kampala.</p>
     <div class="hero-actions">
       <a href="#carousel-menu" class="btn">Explore & Order Menu</a>
-      <a href="tel:+256749632497" class="btn btn-outline">Call +256 749 632 497</a>
+      <a href="tel:+256749632497" class="icon-badge call" style="padding:12px 20px;font-size:0.84rem;">📞 Direct Call</a>
     </div>
   </div>
 </section>
@@ -964,8 +1000,8 @@ button { cursor: pointer; }
       <p style="color:#cbd5e1;margin-bottom:16px;">From double-stacked juicy beef burgers and spiced peri-peri chicken to thick milkshakes and fresh passion-mango juices, every plate leaves our kitchen hot, crisp, and generously portioned.</p>
       <p style="color:var(--muted);margin-bottom:26px;">Available for dine-in, quick pickup, or fast boda delivery across Kampala. Order directly via WhatsApp or call us anytime.</p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <a href="https://wa.me/256749632497" target="_blank" rel="noopener" class="btn btn-magenta">Chat on WhatsApp</a>
-        <a href="tel:+256749632497" class="btn btn-outline">Call Kitchen</a>
+        <a href="https://wa.me/256749632497" target="_blank" rel="noopener" class="icon-badge wa" style="padding:12px 20px;font-size:0.84rem;">💬 Chat on WhatsApp</a>
+        <a href="tel:+256749632497" class="icon-badge call" style="padding:12px 20px;font-size:0.84rem;">📞 Call Kitchen</a>
       </div>
     </div>
   </div>
@@ -976,14 +1012,17 @@ button { cursor: pointer; }
   <div class="container contact-grid">
     <div class="contact-card">
       <span class="eyebrow">Direct Orders & Reservations</span>
-      <h2 style="font-family:'Playfair Display',serif;font-size:2.1rem;margin:8px 0 12px;">Visit or Call <span class="accent-cyan">Moin's Cafe</span></h2>
-      <p style="color:var(--muted);">Need a quick delivery or group platter? Reach our team directly by phone or WhatsApp.</p>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2.1rem;margin:8px 0 12px;">Visit or Connect with <span class="accent-cyan">Moin's Cafe</span></h2>
+      <p style="color:var(--muted);">Need a quick delivery or group platter? Reach our team securely via call or WhatsApp.</p>
 
       <div class="contact-item">
         <div class="contact-icon">📲</div>
         <div>
-          <strong>WhatsApp & Phone Orders</strong><br/>
-          <a href="tel:+256749632497" style="color:var(--cyan);font-weight:700;">+256 749 632 497</a>
+          <strong>Instant Order Lines</strong><br/>
+          <div style="display:flex;gap:8px;margin-top:6px;">
+            <a href="https://wa.me/256749632497" target="_blank" rel="noopener" class="icon-badge wa">💬 WhatsApp</a>
+            <a href="tel:+256749632497" class="icon-badge call">📞 Call Line</a>
+          </div>
         </div>
       </div>
 
@@ -1027,10 +1066,11 @@ button { cursor: pointer; }
   <div class="container footer-flex">
     <div>
       <strong style="color:#fff;font-family:'Playfair Display',serif;font-size:1.25rem;">Moin's Cafe — Kampala</strong>
-      <p style="margin:4px 0 0;">Fresh burgers, grills, fries & juices • Orders: +256 749 632 497</p>
+      <p style="margin:4px 0 0;">Fresh burgers, grills, fries & juices • Secure direct ordering available</p>
     </div>
-    <div>
-      <a href="https://wa.me/256749632497" target="_blank" rel="noopener" style="color:var(--cyan);font-weight:700;">WhatsApp +256 749 632 497</a>
+    <div style="display:flex;gap:10px;">
+      <a href="https://wa.me/256749632497" target="_blank" rel="noopener" class="icon-badge wa">💬 WhatsApp</a>
+      <a href="tel:+256749632497" class="icon-badge call">📞 Call</a>
     </div>
   </div>
 </footer>
@@ -1073,11 +1113,11 @@ button { cursor: pointer; }
       <input type="text" id="custAddress" placeholder="e.g. Kololo, Bukoto, Ntinda, or Table #"/>
     </div>
 
-    <button type="button" id="sendWhatsappOrderBtn" class="btn" style="width:100%;margin-top:16px;">
-      Send Order via WhatsApp (+256 749 632 497)
+    <button type="button" id="sendWhatsappOrderBtn" class="icon-badge wa" style="width:100%;margin-top:16px;padding:14px;justify-content:center;font-size:0.9rem;">
+      💬 Send Order via WhatsApp
     </button>
-    <a href="tel:+256749632497" class="btn btn-outline" style="width:100%;margin-top:10px;text-align:center;">
-      Or Call +256 749 632 497
+    <a href="tel:+256749632497" class="icon-badge call" style="width:100%;margin-top:10px;padding:12px;justify-content:center;font-size:0.86rem;text-align:center;display:flex;">
+      📞 Direct Call Kitchen
     </a>
   </div>
 </div>
@@ -1119,7 +1159,7 @@ button { cursor: pointer; }
       <button type="button" class="admin-tab" data-tab="tab-security">🔐 Admin Password</button>
     </div>
 
-    <!-- TAB 1: QUICK PRICE EDITOR FOR EVERY ITEM -->
+    <!-- TAB 1: QUICK PRICE EDITOR -->
     <div id="tab-prices" class="admin-panel-section active">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
         <p style="margin:0;color:var(--muted);font-size:0.88rem;">Adjust the UGX price for any item below and save immediately.</p>
@@ -1141,7 +1181,7 @@ button { cursor: pointer; }
       </div>
     </div>
 
-    <!-- TAB 2: ADD / EDIT MENU ITEMS & UPLOAD PHOTOS -->
+    <!-- TAB 2: EDIT MENU & UPLOAD PHOTOS -->
     <div id="tab-items" class="admin-panel-section">
       <div style="background:var(--surface-2);border:1px solid var(--cyan);border-radius:14px;padding:16px;margin-bottom:20px;">
         <h4 style="margin:0 0 12px;color:var(--cyan);">+ Add New Menu Item</h4>
@@ -1165,7 +1205,7 @@ button { cursor: pointer; }
             <input type="number" id="newItemPrice" placeholder="e.g. 22000" step="500"/>
           </div>
           <div class="field-group" style="margin:0;">
-            <label>Upload Item Photo (or paste URL below)</label>
+            <label>Upload Item Photo</label>
             <input type="file" id="newItemFile" accept="image/*"/>
           </div>
         </div>
@@ -1176,7 +1216,7 @@ button { cursor: pointer; }
         <button type="button" class="btn" style="margin-top:12px;" onclick="addNewMenuItem()">Add Item to Menu</button>
       </div>
 
-      <h4 style="margin:0 0 12px;color:#fff;">Existing Menu Items (Upload New Photo or Delete)</h4>
+      <h4 style="margin:0 0 12px;color:#fff;">Existing Menu Items</h4>
       <div id="adminItemsList"></div>
     </div>
 
@@ -1201,7 +1241,7 @@ button { cursor: pointer; }
     <div id="tab-security" class="admin-panel-section">
       <div style="max-width:420px;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:18px;">
         <h4 style="margin:0 0 8px;color:var(--cyan);">Update Admin Password</h4>
-        <p style="font-size:0.84rem;color:var(--muted);margin-top:0;">Current default password is <code>271024k</code>. Set a new password below.</p>
+        <p style="font-size:0.84rem;color:var(--muted);margin-top:0;">Default password is <code>271024k</code>.</p>
         <div class="field-group">
           <label>New Password</label>
           <input type="password" id="newAdminPass1" placeholder="Enter new password"/>
@@ -1219,10 +1259,10 @@ button { cursor: pointer; }
 <script>
 const WHATSAPP_NUMBER = "256749632497";
 const STORAGE_KEYS = {
-  MENU: "moins_cafe_menu_v2",
-  PHOTOS: "moins_cafe_photos_v2",
-  PASS: "moins_cafe_admin_pass_v2",
-  CART: "moins_cafe_cart_v2"
+  MENU: "moins_cafe_menu_v3",
+  PHOTOS: "moins_cafe_photos_v3",
+  PASS: "moins_cafe_admin_pass_v3",
+  CART: "moins_cafe_cart_v3"
 };
 
 const DEFAULT_PHOTOS = {
@@ -1231,36 +1271,30 @@ const DEFAULT_PHOTOS = {
 };
 
 const DEFAULT_MENU = [
-  // Burgers & Wraps
   { id: "b1", name: "Moin's Classic Beef Burger", category: "Burgers & Wraps", price: 18000, desc: "Juicy grilled beef patty, cheddar cheese, crisp lettuce, tomato & house burger sauce.", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=85" },
   { id: "b2", name: "Double Smash Cheese Burger", category: "Burgers & Wraps", price: 25000, desc: "Two seared beef patties, double melted cheddar, caramelized onions & smoky mayo.", img: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=800&q=85" },
   { id: "b3", name: "Crispy Zinger Chicken Burger", category: "Burgers & Wraps", price: 20000, desc: "Golden spiced crispy chicken breast, coleslaw, pickles & spicy garlic aioli.", img: "https://images.unsplash.com/photo-1615297928064-24977384d0da?auto=format&fit=crop&w=800&q=85" },
   { id: "b4", name: "Grilled Chicken Shawarma Wrap", category: "Burgers & Wraps", price: 16000, desc: "Marinated grilled chicken strips, garlic toum, fries & fresh veggies wrapped warm.", img: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=85" },
 
-  // Chicken & Grills
   { id: "c1", name: "Quarter Flame-Grilled Chicken", category: "Chicken & Grills", price: 18000, desc: "Chargrilled quarter chicken basted in peri-peri or BBQ glaze, served with fries.", img: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=800&q=85" },
   { id: "c2", name: "Half Roasted Peri-Peri Chicken", category: "Chicken & Grills", price: 32000, desc: "Half spring chicken slow-marinated in herbs, chili & lemon with house dip.", img: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=800&q=85" },
   { id: "c3", name: "Crispy Buffalo Wings (8 Pcs)", category: "Chicken & Grills", price: 22000, desc: "Crunchy fried chicken wings tossed in tangy buffalo or honey-chili sauce.", img: "https://images.unsplash.com/photo-1608039755401-742074f0548d?auto=format&fit=crop&w=800&q=85" },
   { id: "c4", name: "Chicken Tenders & Dip", category: "Chicken & Grills", price: 19000, desc: "Hand-breaded tender chicken strips served with honey mustard & sweet chili.", img: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=800&q=85" },
 
-  // Fries & Platters
   { id: "f1", name: "Masala Spiced Chips", category: "Fries & Platters", price: 10000, desc: "Crispy golden fries tossed in rich Kampala-style tomato-chili masala glaze.", img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=85" },
   { id: "f2", name: "Loaded Chicken & Cheese Fries", category: "Fries & Platters", price: 18000, desc: "Seasoned fries topped with diced grilled chicken, melted cheese sauce & jalapenos.", img: "https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=800&q=85" },
   { id: "f3", name: "Classic Golden French Fries", category: "Fries & Platters", price: 8000, desc: "Crisp on the outside, fluffy inside, lightly salted with ketchup & mayo.", img: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=800&q=85" },
   { id: "f4", name: "Moin's Sharing Platter", category: "Fries & Platters", price: 45000, desc: "Wings, chicken tenders, samosas, sausages, masala fries & 3 signature dips.", img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=85" },
 
-  // Fresh Juices & Shakes
   { id: "j1", name: "Fresh Passion & Mango Juice", category: "Fresh Juices & Shakes", price: 8000, desc: "100% pure cold-pressed Ugandan passion fruit and ripe mango blend.", img: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=800&q=85" },
   { id: "j2", name: "Pineapple Mint Cooler", category: "Fresh Juices & Shakes", price: 8000, desc: "Chilled sweet pineapple pressed with fresh garden mint leaves and lime.", img: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=800&q=85" },
   { id: "j3", name: "Oreo Vanilla Thick Shake", category: "Fresh Juices & Shakes", price: 15000, desc: "Creamy vanilla ice cream blended with crushed Oreo cookies & whipped cream.", img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=800&q=85" },
   { id: "j4", name: "Belgian Chocolate Milkshake", category: "Fresh Juices & Shakes", price: 15000, desc: "Rich dark chocolate ice cream shake drizzled with chocolate fudge.", img: "https://images.unsplash.com/photo-1579954115545-a95591f28bfc?auto=format&fit=crop&w=800&q=85" },
 
-  // Coffee & Hot Drinks
   { id: "h1", name: "Kampala Cappuccino", category: "Coffee & Hot Drinks", price: 9000, desc: "Freshly pulled Ugandan Arabica espresso topped with velvety steamed milk foam.", img: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=800&q=85" },
   { id: "h2", name: "Spiced African Masala Tea", category: "Coffee & Hot Drinks", price: 8000, desc: "Aromatic black tea simmered with fresh ginger, cardamom, cinnamon & milk.", img: "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?auto=format&fit=crop&w=800&q=85" }
 ];
 
-// STATE INITIALIZATION
 let menuItems = JSON.parse(localStorage.getItem(STORAGE_KEYS.MENU)) || structuredClone(DEFAULT_MENU);
 let sitePhotos = JSON.parse(localStorage.getItem(STORAGE_KEYS.PHOTOS)) || structuredClone(DEFAULT_PHOTOS);
 let adminPassword = localStorage.getItem(STORAGE_KEYS.PASS) || "271024k";
@@ -1285,7 +1319,6 @@ function saveState() {
   localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(cart));
 }
 
-// APPLY HOMEPAGE PHOTOS
 function applyHomepagePhotos() {
   document.querySelector(".hero").style.backgroundImage = `url('${sitePhotos.hero}')`;
   document.getElementById("aboutFeatureImg").src = sitePhotos.about;
@@ -1293,7 +1326,6 @@ function applyHomepagePhotos() {
   document.getElementById("previewAboutImg").src = sitePhotos.about;
 }
 
-// CART QUANTITY LOGIC (- AND +)
 function changeQty(id, delta) {
   const current = cart[id] || 0;
   const next = Math.max(0, current + delta);
@@ -1325,7 +1357,6 @@ function updateCartUI() {
     bar.hidden = true;
   }
 
-  // Update Modal List if open
   const listEl = document.getElementById("cartItemsList");
   if (entries.length === 0) {
     listEl.innerHTML = `<p style="color:var(--muted);text-align:center;padding:18px 0;">Your cart is empty. Use the + button on any menu item to add it.</p>`;
@@ -1353,7 +1384,6 @@ function updateCartUI() {
   document.getElementById("cartModalTotal").textContent = formatUGX(totalPrice);
 }
 
-// RENDER CAROUSEL & CATEGORY TABS
 function renderCategoryTabs() {
   const categories = ["All", ...new Set(menuItems.map(i => i.category))];
   const tabsEl = document.getElementById("catTabs");
@@ -1401,7 +1431,6 @@ function renderCarousel() {
   }).join("");
 }
 
-// RENDER COMPLETE CATEGORIZED MENU LIST
 function renderFullMenuGrid() {
   const categories = [...new Set(menuItems.map(i => i.category))];
   const grid = document.getElementById("fullMenuGrid");
@@ -1433,7 +1462,6 @@ function renderFullMenuGrid() {
   }).join("");
 }
 
-// CAROUSEL ARROWS
 document.getElementById("scrollLeftBtn").addEventListener("click", () => {
   document.getElementById("carouselTrack").scrollBy({ left: -520, behavior: "smooth" });
 });
@@ -1441,7 +1469,6 @@ document.getElementById("scrollRightBtn").addEventListener("click", () => {
   document.getElementById("carouselTrack").scrollBy({ left: 520, behavior: "smooth" });
 });
 
-// TOP-RIGHT 3 LINES HAMBURGER DRAWER
 const menuToggleBtn = document.getElementById("menuToggleBtn");
 const navDrawer = document.getElementById("navDrawer");
 
@@ -1462,7 +1489,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// CART MODAL & WHATSAPP CHECKOUT
 document.getElementById("cartBar").addEventListener("click", () => {
   updateCartUI();
   document.getElementById("cartModal").hidden = false;
@@ -1512,7 +1538,6 @@ document.getElementById("quickContactForm").addEventListener("submit", (e) => {
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
 });
 
-// ADMIN AUTHENTICATION & BACKEND
 document.getElementById("openAdminDrawerBtn").addEventListener("click", () => {
   closeDrawer();
   document.getElementById("adminPassInput").value = "";
@@ -1541,7 +1566,6 @@ document.getElementById("adminLoginForm").addEventListener("submit", (e) => {
   }
 });
 
-// ADMIN TABS SWITCHING
 document.querySelectorAll(".admin-tab").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".admin-tab").forEach(b => b.classList.remove("active"));
@@ -1551,7 +1575,6 @@ document.querySelectorAll(".admin-tab").forEach(btn => {
   });
 });
 
-// IMAGE COMPRESSION HELPER FOR DEVICE UPLOADS
 function compressImageFile(file, maxWidth = 900, quality = 0.82) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -1574,9 +1597,7 @@ function compressImageFile(file, maxWidth = 900, quality = 0.82) {
   });
 }
 
-// RENDER ADMIN DASHBOARD (PRICES + ITEMS)
 function renderAdminDashboard() {
-  // 1. Price Table
   const tbody = document.getElementById("adminPriceTableBody");
   tbody.innerHTML = menuItems.map(item => `
     <tr>
@@ -1592,7 +1613,6 @@ function renderAdminDashboard() {
     </tr>
   `).join("");
 
-  // 2. Menu Items & Photo Upload List
   const itemsList = document.getElementById("adminItemsList");
   itemsList.innerHTML = menuItems.map(item => `
     <div class="admin-item-card">
@@ -1754,7 +1774,6 @@ function refreshAllViews() {
   renderAdminDashboard();
 }
 
-// INITIAL BOOT
 applyHomepagePhotos();
 refreshAllViews();
 </script>
