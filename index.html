@@ -135,7 +135,7 @@ button { font: inherit; cursor: pointer; border: 0; background: none; }
 .mint-badge {
   position: absolute;
   left: 575px;
-  top: 115px;
+  top: 105px;
   width: 292px;
   height: 37px;
   border-radius: 99px;
@@ -154,12 +154,12 @@ button { font: inherit; cursor: pointer; border: 0; background: none; }
   position: absolute;
   left: 0;
   right: 0;
-  top: 176px;
+  top: 160px;
   text-align: center;
   font-family: 'Inter Tight', sans-serif;
   font-weight: 700;
-  font-size: 88px;
-  line-height: 92px;
+  font-size: 72px;
+  line-height: 80px;
   letter-spacing: -0.035em;
   color: var(--ink);
   pointer-events: none;
@@ -167,97 +167,12 @@ button { font: inherit; cursor: pointer; border: 0; background: none; }
 .headline span { display: block; }
 .headline span:nth-child(2) { letter-spacing: -0.022em; color: var(--forest); }
 
-/* SUBLINE */
-.subline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 394px;
-  text-align: center;
-  font-size: 20.8px;
-  line-height: 32px;
-  color: var(--muted);
-  font-weight: 400;
-  pointer-events: none;
-}
-
-/* HAND-DRAWN NOTES & ARROWS (CAVEAT) */
-.note-doodle {
-  position: absolute;
-  font-family: 'Caveat', cursive;
-  font-weight: 600;
-  color: var(--forest);
-  pointer-events: none;
-  font-size: 24px;
-  line-height: 1.1;
-  white-space: pre-wrap;
-  z-index: 10;
-}
-svg.doodle-svg {
-  position: absolute;
-  inset: 0;
-  width: 1440px;
-  height: 1080px;
-  pointer-events: none;
-  z-index: 9;
-}
-svg.doodle-svg path {
-  fill: none;
-  stroke: var(--forest);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  animation: drawStroke 1.6s ease forwards 0.8s;
-}
-@keyframes drawStroke {
-  to { stroke-dashoffset: 0; }
-}
-
-/* BUTTON AT BOTTOM */
-.cta-wrap {
-  position: absolute;
-  left: 626px;
-  top: 901px;
-  width: 190px;
-  height: 74px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.cta-outline-ring {
-  position: absolute;
-  inset: 0;
-  border: 1.5px dashed var(--forest);
-  border-radius: 99px;
-  animation: spinRing 24s linear infinite;
-}
-@keyframes spinRing {
-  to { transform: rotate(360deg); }
-}
-.pill-cta {
-  width: 172px;
-  height: 58px;
-  border-radius: 99px;
-  background: var(--forest);
-  color: var(--white);
-  font-weight: 700;
-  font-size: 16px;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 10px 25px rgba(8,72,45,0.25);
-  transition: 0.2s;
-  z-index: 2;
-}
-.pill-cta:hover { transform: translateY(-2px); background: var(--forest-dark); }
-
-/* CURVED CYLINDER CAROUSEL */
+/* CURVED CYLINDER CAROUSEL (POSITIONED IN THE MIDDLE RIGHT UNDER HEADLINE) */
 .carousel-viewport {
   position: absolute;
   left: 0;
   right: 0;
-  top: 510px;
+  top: 350px;
   height: 380px;
   cursor: grab;
   user-select: none;
@@ -307,6 +222,91 @@ svg.doodle-svg path {
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   z-index: 3;
 }
+
+/* SUBLINE (NOW BELOW THE CAROUSEL) */
+.subline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 760px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 30px;
+  color: var(--muted);
+  font-weight: 400;
+  pointer-events: none;
+}
+
+/* HAND-DRAWN NOTES & ARROWS (CAVEAT) */
+.note-doodle {
+  position: absolute;
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  color: var(--forest);
+  pointer-events: none;
+  font-size: 24px;
+  line-height: 1.1;
+  white-space: pre-wrap;
+  z-index: 10;
+}
+svg.doodle-svg {
+  position: absolute;
+  inset: 0;
+  width: 1440px;
+  height: 1080px;
+  pointer-events: none;
+  z-index: 9;
+}
+svg.doodle-svg path {
+  fill: none;
+  stroke: var(--forest);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: drawStroke 1.6s ease forwards 0.8s;
+}
+@keyframes drawStroke {
+  to { stroke-dashoffset: 0; }
+}
+
+/* BUTTON AT BOTTOM */
+.cta-wrap {
+  position: absolute;
+  left: 626px;
+  top: 920px;
+  width: 190px;
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cta-outline-ring {
+  position: absolute;
+  inset: 0;
+  border: 1.5px dashed var(--forest);
+  border-radius: 99px;
+  animation: spinRing 24s linear infinite;
+}
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+.pill-cta {
+  width: 172px;
+  height: 58px;
+  border-radius: 99px;
+  background: var(--forest);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 16px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 25px rgba(8,72,45,0.25);
+  transition: 0.2s;
+  z-index: 2;
+}
+.pill-cta:hover { transform: translateY(-2px); background: var(--forest-dark); }
 
 /* FLOATING CART BAR */
 .cart-bar {
@@ -498,12 +498,12 @@ svg.doodle-svg path {
   .frame-wrap { height: auto; overflow: auto; padding: 20px 0; }
   .frame { width: 100% !important; height: auto !important; min-height: 900px; }
   .nav-links, .logo span, .top-btns .pill-login { display: none; }
-  .mint-badge { left: 50%; transform: translateX(-50%); width: auto; padding: 0 20px; font-size: 14px; top: 95px; }
-  .headline { font-size: 46px; line-height: 52px; top: 155px; padding: 0 16px; }
-  .subline { font-size: 16px; line-height: 24px; top: 290px; padding: 0 20px; }
+  .mint-badge { left: 50%; transform: translateX(-50%); width: auto; padding: 0 20px; font-size: 14px; top: 85px; }
+  .headline { font-size: 38px; line-height: 46px; top: 140px; padding: 0 16px; }
+  .carousel-viewport { top: 290px; height: 260px; }
+  .subline { font-size: 15px; line-height: 22px; top: 570px; padding: 0 20px; }
   .note-doodle, svg.doodle-svg { display: none; }
-  .carousel-viewport { top: 420px; height: 260px; }
-  .cta-wrap { left: 50%; transform: translateX(-50%); top: 760px; }
+  .cta-wrap { left: 50%; transform: translateX(-50%); top: 790px; }
 }
 </style>
 </head>
@@ -542,29 +542,28 @@ svg.doodle-svg path {
       <span>with Snackable Bites</span>
     </h1>
 
-    <!-- SUBLINE -->
-    <div class="subline">
-      Grow your appetite with short, snappy product clips by<br/>
-      our handpicked video makers. Our kitchen is ready to<br/>
-      lift your next lunch higher.
-    </div>
-
     <!-- HAND-DRAWN NOTES & ARROWS -->
-    <div class="note-doodle" style="left:263px; top:377px; transform:rotate(-8deg);">//</div>
+    <div class="note-doodle" style="left:230px; top:310px; transform:rotate(-8deg);">//</div>
     
-    <div class="note-doodle" style="left:1212px; top:310px; transform:rotate(16deg);">Be seen<br/>with clips</div>
+    <div class="note-doodle" style="left:1210px; top:280px; transform:rotate(16deg);">Browse categories<br/>with clips</div>
 
-    <div class="note-doodle" style="left:521px; top:937px; transform:rotate(24deg);">Zero cost</div>
+    <div class="note-doodle" style="left:521px; top:950px; transform:rotate(24deg);">Zero cost</div>
 
     <svg class="doodle-svg" viewBox="0 0 1440 1080">
-      <!-- Arrow from Be seen down to carousel -->
-      <path d="M 1240 350 Q 1150 420 1020 480" />
-      <!-- Arrow pointing to the Make a Reel button -->
-      <path d="M 520 930 Q 560 920 610 925" />
+      <!-- Arrow from Browse categories down to carousel -->
+      <path d="M 1220 320 Q 1140 370 1020 410" />
+      <!-- Arrow pointing to the MENU button -->
+      <path d="M 520 945 Q 560 935 610 940" />
     </svg>
 
-    <!-- CURVED CYLINDER CAROUSEL VIEWPORT -->
+    <!-- CURVED CYLINDER CAROUSEL (MIDDLE OF PAGE) -->
     <div class="carousel-viewport" id="carouselViewport"></div>
+
+    <!-- SUBLINE (BELOW THE CAROUSEL) -->
+    <div class="subline">
+      Grow your appetite with short, snappy product clips by<br/>
+      our handpicked video makers. Our kitchen is ready to lift your next lunch higher.
+    </div>
 
     <!-- BUTTON -->
     <div class="cta-wrap">
@@ -850,7 +849,7 @@ viewport.addEventListener("pointermove", (e) => {
   const now = performance.now();
   const dt = Math.max(1, now - lastTime);
   const dx = e.clientX - lastX;
-  velocity = (dx / dt) * 16.66 * 1.5; // pixel per frame velocity
+  velocity = (dx / dt) * 16.66 * 1.5;
   lastX = e.clientX;
   lastTime = now;
 
@@ -873,12 +872,10 @@ function updateCarousel(time) {
   lastFrameTime = time;
 
   if (!isDragging) {
-    // Auto-scroll ~50u per sec to the left + friction damping on momentum
     scrollOffset += 50 * dt - velocity;
-    velocity *= 0.94; // decay momentum
+    velocity *= 0.94;
   }
 
-  // Wrap scrollOffset
   while (scrollOffset < 0) scrollOffset += totalSpan;
   while (scrollOffset >= totalSpan) scrollOffset -= totalSpan;
 
@@ -888,23 +885,18 @@ function updateCarousel(time) {
     while (baseUnpushed < -totalSpan / 2) baseUnpushed += totalSpan;
     while (baseUnpushed > totalSpan / 2) baseUnpushed -= totalSpan;
 
-    // Cylinder Push: x = 720 + t * (1 + 0.083 * (t/706)^2)
     const t = baseUnpushed;
     const absT = Math.abs(t);
     const pushFactor = 1 + 0.083 * Math.pow(Math.min(1, absT / 706), 2);
     const xCenter = 720 + t * pushFactor;
 
-    // Normalised distance d = |xCenter - 720| / 706
     const d = Math.min(1, Math.abs(xCenter - 720) / 706);
 
-    // Width = (170 + 48 * d^2)u
     const width = 170 + 48 * Math.pow(d, 2);
     const left = xCenter - width / 2;
 
-    // Height = (280 + 92 * q^2.6)u where q is edge normalised distance
     const height = 280 + 92 * Math.pow(d, 2.6);
 
-    // Vertical center = (687 - 12 * d^2)u
     const vCenter = 687 - 12 * Math.pow(d, 2);
     const top = vCenter - height / 2;
 
@@ -1099,7 +1091,6 @@ function switchAdminTab(sec) {
 function renderAdminDashboard() {
   renderAdminPrices();
   renderAdminCategories();
-  // populate category select for new items
   const sel = document.getElementById("newItCat");
   sel.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join("");
 }
@@ -1207,7 +1198,6 @@ function deleteCategory(idx) {
   const cat = categories[idx];
   if (categories.length <= 1) return showToast("Keep at least one category.");
   categories.splice(idx, 1);
-  // reassign items in deleted category to first category
   menuItems.forEach(m => { if (m.category === cat) m.category = categories[0]; });
   saveState();
   renderAdminCategories();
