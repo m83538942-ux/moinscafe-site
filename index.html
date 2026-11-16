@@ -54,7 +54,8 @@ button { cursor: pointer; border: 0; background: none; }
   flex: 0 0 auto;
 }
 .brand { display: flex; align-items: center; gap: 10px; font-family: 'Inter Tight', sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--ink); }
-.logo-icon { width: 32px; height: 32px; border-radius: 10px; background: var(--forest); color: #0B1026; display: grid; place-items: center; box-shadow: 0 0 0 4px rgba(204,255,0,0.12); }
+.logo-icon { width: 32px; height: 32px; border-radius: 10px; background: var(--forest); color: #0B1026; display: grid; place-items: center; box-shadow: 0 0 0 4px rgba(204,255,0,0.12); overflow: hidden; font-size: 1rem; }
+.logo-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .nav-links { display: flex; gap: 18px; align-items: center; font-size: 14px; color: var(--muted); }
 .nav-links a:hover { color: var(--forest); }
 .top-actions { display: flex; gap: 8px; align-items: center; }
@@ -163,7 +164,7 @@ select option { background: #121A33; color: #F7FAFF; }
 
 <div class="app">
   <header class="topbar">
-    <a href="#top" class="brand"><div class="logo-icon">☕</div><span id="siteName">Moin's Cafe</span></a>
+    <a href="#top" class="brand"><div class="logo-icon" id="siteLogo">☕</div><span id="siteName">Moin's Cafe</span></a>
     <nav class="nav-links">
       <a href="#menu" onclick="openMenuModal(); return false;">MENU</a>
       <a href="#menu" onclick="openMenuModal(); return false;">Burgers &amp; Grills</a>
@@ -224,32 +225,10 @@ select option { background: #121A33; color: #F7FAFF; }
     <div class="modal-head" style="justify-content:flex-end;margin-bottom:8px;"><button type="button" class="close-x" onclick="closeAdminLoginModal()">✕</button></div>
     <div style="font-size:2.2rem;margin-bottom:8px;">🔐</div>
     <h3 style="font-family:'Inter Tight',sans-serif;color:var(--ink);margin:0 0 6px;">Admin Access</h3>
-    <p style="color:var(--muted);font-size:.86rem;margin:0 0 14px;">Type your PIN/password or use the keypad.</p>
-    <input type="password" id="adminPinInput" class="admin-input" placeholder="Enter admin PIN/password" autocomplete="current-password" style="max-width:300px;margin:0 auto 12px;text-align:center;letter-spacing:.12em;" oninput="syncPinFromInput()" onkeydown="if(event.key==='Enter'){event.preventDefault();submitPin();}"/>
-    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:14px;" id="pinDots">
-      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
-      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
-      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
-      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
-      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
-      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
-      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:260px;margin:auto;">
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-size:1.1rem;font-weight:700;" onclick="pressPin('1')">1</button>
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-size:1.1rem;font-weight:700;" onclick="pressPin('2')">2</button>
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-size:1.1rem;font-weight:700;" onclick="pressPin('3')">3</button>
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-size:1.1rem;font-weight:700;" onclick="pressPin('4')">4</button>
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-size:1.1rem;font-weight:700;" onclick="pressPin('5')">5</button>
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-size:1.1rem;font-weight:700;" onclick="pressPin('6')">6</button>
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-size:1.1rem;font-weight:700;" onclick="pressPin('7')">7</button>
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-size:1.1rem;font-weight:700;" onclick="pressPin('8')">8</button>
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-size:1.1rem;font-weight:700;" onclick="pressPin('9')">9</button>
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-weight:700;" onclick="clearPin()">C</button>
-      <button type="button" class="pill-ghost" style="height:46px;border-radius:12px;font-size:1.1rem;font-weight:700;" onclick="pressPin('0')">0</button>
-      <button type="button" class="pill-lime" style="height:46px;border-radius:12px;font-weight:800;" onclick="submitPin()">✓</button>
-    </div>
-    <p id="pinErrorMsg" style="color:var(--magenta);font-size:.82rem;font-weight:600;margin-top:12px;min-height:18px;"></p>
+    <p style="color:var(--muted);font-size:.86rem;margin:0 0 14px;">Enter your admin password.</p>
+    <input type="password" id="adminPasswordInput" class="admin-input" placeholder="Enter admin password" autocomplete="current-password" style="max-width:320px;margin:0 auto 14px;text-align:center;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitAdminPassword();}"/>
+    <button type="button" class="pill-lime" style="height:44px;min-width:160px;border-radius:12px;font-weight:800;" onclick="submitAdminPassword()">Unlock Admin</button>
+    <p id="adminLoginError" style="color:var(--magenta);font-size:.82rem;font-weight:600;margin-top:12px;min-height:18px;"></p>
   </div>
 </div>
 
@@ -308,6 +287,21 @@ select option { background: #121A33; color: #F7FAFF; }
         <div class="field-group"><label>Headline Line 1</label><input type="text" id="siteHeadline1" class="admin-input"/></div>
         <div class="field-group"><label>Headline Line 2 (accent)</label><input type="text" id="siteHeadline2" class="admin-input"/></div>
         <div class="field-group" style="grid-column:1/-1"><label>Subline (use | for line break)</label><textarea id="siteSublineText" class="admin-input" rows="3"></textarea></div>
+        <div class="field-group" style="grid-column:1/-1">
+          <label>Logo (emoji or upload image)</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <input type="text" id="siteLogoEmoji" class="admin-input" placeholder="Emoji/text logo e.g. ☕" style="max-width:220px;"/>
+            <input type="file" id="siteLogoFile" accept="image/*" class="admin-input" style="padding:7px;max-width:320px;"/>
+            <button type="button" class="pill-ghost" style="height:40px;padding:0 14px;border-radius:10px;" onclick="clearLogoImage()">Remove Logo Image</button>
+          </div>
+          <div id="siteLogoPreview" style="margin-top:10px;color:var(--muted);font-size:.85rem;"></div>
+        </div>
+        <div class="field-group" style="grid-column:1/-1">
+          <label>Upload Site Photos (gallery)</label>
+          <input type="file" id="sitePhotosUpload" accept="image/*" multiple class="admin-input" style="padding:7px;"/>
+          <div id="sitePhotosPreview" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;"></div>
+          <p style="color:var(--muted);font-size:.8rem;margin:8px 0 0;">Uploaded photos appear as cards in the carousel. Use remove to delete.</p>
+        </div>
       </div>
       <button type="button" class="pill-lime" style="height:42px;padding:0 18px;margin-top:14px;border-radius:10px;" onclick="saveSiteSettings()">Save Site Settings</button>
       <p style="color:var(--muted);font-size:.82rem;margin-top:10px;">Changes are saved on this device/browser and apply to desktop and mobile views.</p>
@@ -338,7 +332,10 @@ const DEFAULT_SITE = {
   badge: "Freshly Prepared Daily in Kampala • 4.9★ Rated",
   headline1: "Crave Bold Flavors",
   headline2: "with Snackable Bites",
-  subline: "Browse dish cards by category in a smooth curved carousel.|Tap any card to add it to your cart and order instantly on WhatsApp."
+  subline: "Browse dish cards by category in a smooth curved carousel.|Tap any card to add it to your cart and order instantly on WhatsApp.",
+  logoEmoji: "☕",
+  logoImage: "",
+  sitePhotos: []
 };
 const DEFAULT_CATEGORIES = ["Burgers & Wraps","Chicken & Grills","Fries & Platters","Fresh Juices & Shakes","Coffee & Hot Drinks"];
 const DEFAULT_MENU = [
@@ -376,16 +373,28 @@ function applySiteSettings(){
   document.getElementById("headline2").textContent = siteSettings.headline2 || DEFAULT_SITE.headline2;
   const sub = (siteSettings.subline || DEFAULT_SITE.subline).split("|").map(escapeHtml).join("<br/>");
   document.getElementById("siteSubline").innerHTML = sub;
+  const logoEl = document.getElementById("siteLogo");
+  if(logoEl){
+    if(siteSettings.logoImage){
+      logoEl.innerHTML = `<img src="${escapeHtml(siteSettings.logoImage)}" alt="Logo"/>`;
+      logoEl.style.background = "rgba(247,250,255,0.08)";
+    } else {
+      logoEl.textContent = siteSettings.logoEmoji || DEFAULT_SITE.logoEmoji || "☕";
+      logoEl.style.background = "var(--forest)";
+    }
+  }
   document.title = `${siteSettings.cafeName || "Moin's Cafe"} | Kampala`;
 }
 
 /* CAROUSEL */
 const viewport = document.getElementById("carouselViewport");
 let cardElements=[], cardData=[], cardWidthPitch=208, totalSpan=0, scrollOffset=0, targetOffset=0;
-let isDragging=false, dragStartX=0, dragStartOffset=0, dragDeltaX=0, velocity=0, lastX=0, lastTime=0;
+let isDragging=false, didDrag=false, dragStartX=0, dragStartOffset=0, dragDeltaX=0, velocity=0, lastX=0, lastTime=0;
 
 function buildCarouselData(){
-  const list=[]; categories.forEach(cat=>menuItems.filter(m=>m.category===cat).forEach(i=>list.push(i)));
+  const list=[];
+  categories.forEach(cat=>menuItems.filter(m=>m.category===cat).forEach(i=>list.push(i)));
+  (siteSettings.sitePhotos||[]).forEach((p,idx)=>list.push({id:`photo_${idx}`, name:p.name||`Site Photo ${idx+1}`, category:p.category||"Gallery", price:0, desc:p.desc||"Uploaded photo", img:p.img, isPhoto:true}));
   return list.length?list:[...menuItems];
 }
 function buildCarousel(){
@@ -398,19 +407,20 @@ function buildCarousel(){
   scrollOffset = totalSpan * 0.35; targetOffset = scrollOffset;
   cardData.forEach(dish=>{
     const el=document.createElement("div"); el.className="card-item";
+    const priceLabel = dish.isPhoto ? "View Photo" : formatUGX(dish.price);
     el.innerHTML = `<div class="card-inner">
       <img src="${escapeHtml(dish.img)}" alt="${escapeHtml(dish.name)}" loading="lazy"/>
-      <div class="card-overlay"></div><div class="add-badge">+</div>
-      <div class="card-meta"><span class="card-cat">${escapeHtml(dish.category)}</span><div class="card-name">${escapeHtml(dish.name)}</div><div class="card-price">${formatUGX(dish.price)}</div></div>
+      <div class="card-overlay"></div>${dish.isPhoto ? "" : '<div class="add-badge">+</div>'}
+      <div class="card-meta"><span class="card-cat">${escapeHtml(dish.category)}</span><div class="card-name">${escapeHtml(dish.name)}</div><div class="card-price">${escapeHtml(priceLabel)}</div></div>
     </div>`;
-    el.addEventListener("click", ()=>{ if(!isDragging && Math.abs(dragDeltaX)<6){ changeQty(dish.id,1); showToast(`Added: ${dish.name}`); } });
+    el.addEventListener("click", (e)=>{ e.preventDefault(); if(didDrag) return; if(dish.isPhoto){ showToast(dish.name); } else { changeQty(dish.id,1); showToast(`Added: ${dish.name}`); } });
     viewport.appendChild(el); cardElements.push(el);
   });
 }
-viewport.addEventListener("pointerdown",(e)=>{ isDragging=true; dragStartX=e.clientX; dragStartOffset=targetOffset; lastX=e.clientX; lastTime=performance.now(); dragDeltaX=0; velocity=0; viewport.setPointerCapture(e.pointerId); });
-viewport.addEventListener("pointermove",(e)=>{ if(!isDragging) return; const now=performance.now(); const dt=Math.max(1,now-lastTime); const dx=e.clientX-lastX; velocity=(dx/dt)*16.66; lastX=e.clientX; lastTime=now; dragDeltaX=e.clientX-dragStartX; targetOffset=dragStartOffset-dragDeltaX; });
-function endDrag(e){ if(!isDragging) return; isDragging=false; targetOffset -= velocity*14; velocity=0; try{viewport.releasePointerCapture(e.pointerId);}catch(_){} }
-viewport.addEventListener("pointerup",endDrag); viewport.addEventListener("pointercancel",endDrag); viewport.addEventListener("pointerleave",(e)=>{ if(isDragging) endDrag(e); });
+viewport.addEventListener("pointerdown",(e)=>{ if(e.button !== undefined && e.button !== 0) return; isDragging=true; didDrag=false; dragStartX=e.clientX; dragStartOffset=targetOffset; lastX=e.clientX; lastTime=performance.now(); dragDeltaX=0; velocity=0; try{viewport.setPointerCapture(e.pointerId);}catch(_){} });
+viewport.addEventListener("pointermove",(e)=>{ if(!isDragging) return; const now=performance.now(); const dt=Math.max(1,now-lastTime); const dx=e.clientX-lastX; velocity=(dx/dt)*16.66; lastX=e.clientX; lastTime=now; dragDeltaX=e.clientX-dragStartX; if(Math.abs(dragDeltaX)>6) didDrag=true; targetOffset=dragStartOffset-dragDeltaX; });
+function endDrag(e){ if(!isDragging) return; isDragging=false; targetOffset -= velocity*14; velocity=0; try{viewport.releasePointerCapture(e.pointerId);}catch(_){} setTimeout(()=>{ didDrag=false; }, 0); }
+viewport.addEventListener("pointerup",endDrag); viewport.addEventListener("pointercancel",(e)=>{ if(!isDragging) return; isDragging=false; velocity=0; didDrag=false; try{viewport.releasePointerCapture(e.pointerId);}catch(_){} }); viewport.addEventListener("pointerleave",(e)=>{ if(isDragging) endDrag(e); });
 viewport.addEventListener("wheel",(e)=>{ if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey){ e.preventDefault(); targetOffset += (e.deltaX||e.deltaY)*0.8; } },{passive:false});
 
 let lastFrame=performance.now();
@@ -504,23 +514,28 @@ function sendWhatsAppOrder(){
 }
 
 /* ADMIN AUTH */
-let enteredPin="";
 function openAdminLoginModal(){
-  enteredPin=""; updatePinDots();
-  const input=document.getElementById("adminPinInput"); if(input){ input.value=""; }
-  document.getElementById("pinErrorMsg").textContent="";
+  const input=document.getElementById("adminPasswordInput");
+  const err=document.getElementById("adminLoginError");
+  if(input) input.value="";
+  if(err) err.textContent="";
   document.getElementById("adminLoginModal").hidden=false;
   setTimeout(()=>{ if(input) input.focus(); }, 0);
 }
 function closeAdminLoginModal(){ document.getElementById("adminLoginModal").hidden=true; }
-function syncPinFromInput(){ const input=document.getElementById("adminPinInput"); enteredPin=(input?input.value:"").slice(0,24); updatePinDots(); }
-function pressPin(d){ const input=document.getElementById("adminPinInput"); enteredPin=(enteredPin+d).slice(0,24); if(input) input.value=enteredPin; updatePinDots(); }
-function clearPin(){ enteredPin=""; const input=document.getElementById("adminPinInput"); if(input) input.value=""; updatePinDots(); document.getElementById("pinErrorMsg").textContent=""; }
-function updatePinDots(){ document.querySelectorAll(".pindot").forEach((dot,i)=>{ dot.style.background = i<enteredPin.length ? "var(--forest)" : "transparent"; }); }
-function submitPin(){
-  const input=document.getElementById("adminPinInput"); if(input) enteredPin=input.value;
-  if(enteredPin===adminPassword){ closeAdminLoginModal(); renderAdminDashboard(); document.getElementById("adminDashboardModal").hidden=false; showToast("Admin access granted"); }
-  else { document.getElementById("pinErrorMsg").textContent="Incorrect PIN/password. Try again."; clearPin(); }
+function submitAdminPassword(){
+  const input=document.getElementById("adminPasswordInput");
+  const err=document.getElementById("adminLoginError");
+  const value=input ? input.value : "";
+  if(value===adminPassword){
+    closeAdminLoginModal();
+    renderAdminDashboard();
+    document.getElementById("adminDashboardModal").hidden=false;
+    showToast("Admin access granted");
+  } else {
+    if(err) err.textContent="Incorrect password. Try again.";
+    if(input){ input.value=""; input.focus(); }
+  }
 }
 function closeAdminDashboardModal(){ document.getElementById("adminDashboardModal").hidden=true; }
 function switchAdminTab(evt,sec){
@@ -577,6 +592,54 @@ function loadSiteSettingsForm(){
   const set=(id,val)=>{ const el=document.getElementById(id); if(el) el.value=val||""; };
   set("siteCafeName", s.cafeName); set("siteWhatsapp", s.whatsapp); set("siteBadgeText", s.badge);
   set("siteHeadline1", s.headline1); set("siteHeadline2", s.headline2); set("siteSublineText", s.subline);
+  set("siteLogoEmoji", s.logoEmoji || DEFAULT_SITE.logoEmoji);
+  renderLogoPreview();
+  renderSitePhotosPreview();
+  const lp=document.getElementById("siteLogoFile"); if(lp) lp.value="";
+  const sp=document.getElementById("sitePhotosUpload"); if(sp) sp.value="";
+}
+function renderLogoPreview(){
+  const box=document.getElementById("siteLogoPreview"); if(!box) return;
+  if(siteSettings.logoImage){
+    box.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><img src="${escapeHtml(siteSettings.logoImage)}" alt="Logo preview" style="width:48px;height:48px;object-fit:cover;border-radius:10px;border:1px solid var(--line);"/><span>Custom logo image active.</span></div>`;
+  } else {
+    box.innerHTML = `<span>Using emoji/text logo: <strong style="color:var(--forest);">${escapeHtml(siteSettings.logoEmoji || DEFAULT_SITE.logoEmoji)}</strong></span>`;
+  }
+}
+function clearLogoImage(){
+  siteSettings.logoImage = "";
+  saveState(); applySiteSettings(); renderLogoPreview(); buildCarousel(); showToast("Logo image removed");
+}
+function renderSitePhotosPreview(){
+  const box=document.getElementById("sitePhotosPreview"); if(!box) return;
+  const photos = siteSettings.sitePhotos || [];
+  if(!photos.length){ box.innerHTML = `<span style="color:var(--muted);font-size:.85rem;">No uploaded site photos yet.</span>`; return; }
+  box.innerHTML = photos.map((p,idx)=>`
+    <div style="width:110px;background:rgba(247,250,255,0.04);border:1px solid var(--line);border-radius:10px;padding:6px;">
+      <img src="${escapeHtml(p.img)}" alt="${escapeHtml(p.name||'Photo')}" style="width:100%;height:72px;object-fit:cover;border-radius:8px;display:block;"/>
+      <div style="font-size:.72rem;color:var(--ink);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(p.name||('Photo '+(idx+1)))}</div>
+      <button type="button" class="pill-ghost" style="height:28px;width:100%;margin-top:6px;border-radius:8px;font-size:.72rem;" onclick="removeSitePhoto(${idx})">Remove</button>
+    </div>`).join("");
+}
+function removeSitePhoto(idx){
+  siteSettings.sitePhotos = (siteSettings.sitePhotos||[]).filter((_,i)=>i!==idx);
+  saveState(); renderSitePhotosPreview(); buildCarousel(); showToast("Photo removed");
+}
+async function handleLogoUpload(file){
+  if(!file) return;
+  siteSettings.logoImage = await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(file); });
+  saveState(); applySiteSettings(); renderLogoPreview(); showToast("Logo image updated");
+}
+async function handleSitePhotosUpload(files){
+  if(!files || !files.length) return;
+  siteSettings.sitePhotos = siteSettings.sitePhotos || [];
+  for(const file of Array.from(files)){
+    const img = await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(file); });
+    siteSettings.sitePhotos.push({img, name:file.name.replace(/\.[^.]+$/,''), category:"Gallery", desc:"Uploaded site photo"});
+  }
+  saveState(); renderSitePhotosPreview(); buildCarousel();
+  const sp=document.getElementById("sitePhotosUpload"); if(sp) sp.value="";
+  showToast("Photos uploaded");
 }
 function saveSiteSettings(){
   siteSettings.cafeName = document.getElementById("siteCafeName").value.trim() || DEFAULT_SITE.cafeName;
@@ -585,7 +648,9 @@ function saveSiteSettings(){
   siteSettings.headline1 = document.getElementById("siteHeadline1").value.trim() || DEFAULT_SITE.headline1;
   siteSettings.headline2 = document.getElementById("siteHeadline2").value.trim() || DEFAULT_SITE.headline2;
   siteSettings.subline = document.getElementById("siteSublineText").value.trim() || DEFAULT_SITE.subline;
-  saveState(); applySiteSettings(); showToast("Site settings saved");
+  const logoEmoji = document.getElementById("siteLogoEmoji").value.trim();
+  siteSettings.logoEmoji = logoEmoji || DEFAULT_SITE.logoEmoji;
+  saveState(); applySiteSettings(); renderLogoPreview(); buildCarousel(); showToast("Site settings saved");
 }
 function updateAdminPassword(){
   const p1=document.getElementById("newPass1").value, p2=document.getElementById("newPass2").value;
@@ -597,6 +662,8 @@ function updateAdminPassword(){
 }
 
 /* INIT */
+document.getElementById("siteLogoFile")?.addEventListener("change", (e)=>{ const f=e.target.files&&e.target.files[0]; if(f) handleLogoUpload(f); });
+document.getElementById("sitePhotosUpload")?.addEventListener("change", (e)=>{ if(e.target.files && e.target.files.length) handleSitePhotosUpload(e.target.files); });
 applySiteSettings();
 buildCarousel();
 updateCartBar();
