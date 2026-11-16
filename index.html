@@ -389,7 +389,7 @@ function applySiteSettings(){
 /* CAROUSEL */
 const viewport = document.getElementById("carouselViewport");
 let cardElements=[], cardData=[], cardWidthPitch=208, totalSpan=0, scrollOffset=0, targetOffset=0;
-let isDragging=false, didDrag=false, dragStartX=0, dragStartOffset=0, dragDeltaX=0, velocity=0, lastX=0, lastTime=0;
+let isDragging=false, dragMoved=false, dragStartX=0, dragStartOffset=0, dragDeltaX=0, velocity=0, lastX=0, lastTime=0;
 
 function buildCarouselData(){
   const list=[];
@@ -413,14 +413,17 @@ function buildCarousel(){
       <div class="card-overlay"></div>${dish.isPhoto ? "" : '<div class="add-badge">+</div>'}
       <div class="card-meta"><span class="card-cat">${escapeHtml(dish.category)}</span><div class="card-name">${escapeHtml(dish.name)}</div><div class="card-price">${escapeHtml(priceLabel)}</div></div>
     </div>`;
-    el.addEventListener("click", (e)=>{ e.preventDefault(); if(didDrag) return; if(dish.isPhoto){ showToast(dish.name); } else { changeQty(dish.id,1); showToast(`Added: ${dish.name}`); } });
+    el.addEventListener("click", (e)=>{ e.preventDefault(); e.stopPropagation(); if(dragMoved){ dragMoved=false; return; } if(dish.isPhoto){ showToast(dish.name); } else { changeQty(dish.id,1); showToast(`Added: ${dish.name}`); } });
     viewport.appendChild(el); cardElements.push(el);
   });
 }
-viewport.addEventListener("pointerdown",(e)=>{ if(e.button !== undefined && e.button !== 0) return; isDragging=true; didDrag=false; dragStartX=e.clientX; dragStartOffset=targetOffset; lastX=e.clientX; lastTime=performance.now(); dragDeltaX=0; velocity=0; try{viewport.setPointerCapture(e.pointerId);}catch(_){} });
-viewport.addEventListener("pointermove",(e)=>{ if(!isDragging) return; const now=performance.now(); const dt=Math.max(1,now-lastTime); const dx=e.clientX-lastX; velocity=(dx/dt)*16.66; lastX=e.clientX; lastTime=now; dragDeltaX=e.clientX-dragStartX; if(Math.abs(dragDeltaX)>6) didDrag=true; targetOffset=dragStartOffset-dragDeltaX; });
-function endDrag(e){ if(!isDragging) return; isDragging=false; targetOffset -= velocity*14; velocity=0; try{viewport.releasePointerCapture(e.pointerId);}catch(_){} setTimeout(()=>{ didDrag=false; }, 0); }
-viewport.addEventListener("pointerup",endDrag); viewport.addEventListener("pointercancel",(e)=>{ if(!isDragging) return; isDragging=false; velocity=0; didDrag=false; try{viewport.releasePointerCapture(e.pointerId);}catch(_){} }); viewport.addEventListener("pointerleave",(e)=>{ if(isDragging) endDrag(e); });
+viewport.addEventListener("pointerdown",(e)=>{ if(e.button !== undefined && e.button !== 0) return; isDragging=true; dragMoved=false; dragStartX=e.clientX; dragStartOffset=targetOffset; lastX=e.clientX; lastTime=performance.now(); dragDeltaX=0; velocity=0; try{viewport.setPointerCapture(e.pointerId);}catch(_){} });
+viewport.addEventListener("pointermove",(e)=>{ if(!isDragging) return; const now=performance.now(); const dt=Math.max(1,now-lastTime); const dx=e.clientX-lastX; velocity=(dx/dt)*16.66; lastX=e.clientX; lastTime=now; dragDeltaX=e.clientX-dragStartX; if(Math.abs(dragDeltaX)>6) dragMoved=true; targetOffset=dragStartOffset-dragDeltaX; });
+function endDrag(e){ if(!isDragging) return; isDragging=false; if(!dragMoved){ velocity = 0; } else { targetOffset -= velocity*14; } velocity=0; try{ if(e && e.pointerId != null) viewport.releasePointerCapture(e.pointerId); }catch(_){} }
+viewport.addEventListener("pointerup", endDrag);
+viewport.addEventListener("pointercancel", (e)=>{ if(!isDragging) return; isDragging=false; dragMoved=false; velocity=0; try{ if(e && e.pointerId != null) viewport.releasePointerCapture(e.pointerId); }catch(_){} });
+viewport.addEventListener("pointerleave", (e)=>{ if(isDragging) endDrag(e); });
+viewport.addEventListener("dragstart", (e)=>e.preventDefault());
 viewport.addEventListener("wheel",(e)=>{ if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey){ e.preventDefault(); targetOffset += (e.deltaX||e.deltaY)*0.8; } },{passive:false});
 
 let lastFrame=performance.now();
