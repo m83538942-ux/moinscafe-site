@@ -11,24 +11,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter+Tight:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg: #0B1026;            /* midnight navy */
+  --bg: #0B1026;
   --surface: #121A33;
   --surface-soft: #162040;
   --surface-alt: #1A2545;
-  --forest: #CCFF00;        /* electric lime accent */
+  --forest: #CCFF00;
   --forest-dark: #B3E600;
   --mint: #1E2A4D;
-  --mint-light: #24325A;
-  --ink: #F7FAFF;           /* cloud white */
+  --ink: #F7FAFF;
   --muted: #B8C4E3;
   --line: #2A3866;
   --white: #F7FAFF;
   --magenta: #FF4D8D;
   --shadow: 0 20px 50px rgba(2, 6, 23, 0.45);
 }
-
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html, body { height: 100%; }
 body {
   margin: 0;
   background:
@@ -40,37 +38,27 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
-
 ::selection { background: var(--forest); color: #0B1026; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
 
-/* 1440x1080 FRAME CONTAINER */
-.frame-wrap {
-  width: 100vw;
+.app {
   min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.topbar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 28px 8px;
   position: relative;
-  padding: 12px 0;
+  z-index: 30;
 }
-.frame {
-  width: 1440px;
-  height: 1080px;
-  position: relative;
-  flex: none;
-  transform-origin: center center;
-  overflow: hidden;
-  background: transparent;
-}
-
-/* TOP BAR */
-.logo {
-  position: absolute;
-  left: 37px;
-  top: 36px;
+.brand {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -78,558 +66,178 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
   font-weight: 700;
   font-size: 1.35rem;
   color: var(--white);
-  z-index: 20;
+  flex-shrink: 0;
 }
 .logo-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: var(--forest);
-  color: #0B1026;
-  display: grid;
-  place-items: center;
-  font-size: 1rem;
+  width: 34px; height: 34px; border-radius: 10px;
+  background: var(--forest); color: #0B1026;
+  display: grid; place-items: center; font-size: 1rem;
   box-shadow: 0 0 0 4px rgba(204,255,0,0.12);
 }
 .nav-links {
-  position: absolute;
-  left: 480px;
-  top: 42px;
-  display: flex;
-  gap: 28px;
-  font-size: 15.5px;
-  font-weight: 500;
-  color: var(--muted);
-  z-index: 20;
+  display: flex; gap: 22px; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 500; color: var(--muted);
 }
-.nav-links a { transition: color .2s ease; }
 .nav-links a:hover { color: var(--forest); }
-.top-btns {
-  position: absolute;
-  right: 37px;
-  top: 29px;
-  display: flex;
-  gap: 12px;
-  z-index: 20;
+.top-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+.pill {
+  min-width: 90px; height: 40px; padding: 0 16px; border-radius: 99px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; transition: .2s ease;
 }
-.pill-login {
-  min-width: 92px;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 99px;
-  background: rgba(247,250,255,0.06);
-  border: 1px solid var(--line);
-  color: var(--white);
-  font-weight: 600;
-  font-size: 14px;
-  display: grid;
-  place-items: center;
-  backdrop-filter: blur(8px);
-  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+.pill-ghost {
+  background: rgba(247,250,255,0.06); border: 1px solid var(--line); color: var(--white);
 }
-.pill-login:hover { border-color: rgba(204,255,0,0.6); background: rgba(247,250,255,0.1); transform: translateY(-1px); }
-.pill-signup {
-  min-width: 97px;
-  height: 40px;
-  padding: 0 18px;
-  border-radius: 99px;
-  background: var(--forest);
-  color: #0B1026;
-  font-weight: 700;
-  font-size: 14px;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 8px 24px rgba(204,255,0,0.22);
-  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+.pill-ghost:hover { border-color: rgba(204,255,0,0.6); background: rgba(247,250,255,0.1); }
+.pill-lime {
+  background: var(--forest); color: #0B1026; box-shadow: 0 8px 24px rgba(204,255,0,0.22);
 }
-.pill-signup:hover { background: var(--forest-dark); transform: translateY(-1px); box-shadow: 0 12px 28px rgba(204,255,0,0.28); }
+.pill-lime:hover { background: var(--forest-dark); transform: translateY(-1px); }
 
-/* MINT BADGE */
-.mint-badge {
-  position: absolute;
-  left: 50%;
-  top: 80px;
-  transform: translateX(-50%);
-  padding: 0 22px;
-  height: 38px;
-  border-radius: 99px;
-  background: rgba(204,255,0,0.12);
-  border: 1px solid rgba(204,255,0,0.35);
-  color: var(--forest);
-  font-weight: 600;
-  font-size: 15.5px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
+.hero {
+  text-align: center;
+  padding: 6px 20px 0;
   z-index: 10;
+}
+.mint-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 8px 18px; min-height: 38px; border-radius: 99px;
+  background: rgba(204,255,0,0.12); border: 1px solid rgba(204,255,0,0.35);
+  color: var(--forest); font-weight: 600; font-size: 14.5px;
   backdrop-filter: blur(6px);
 }
-
-/* HEADLINE */
 .headline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 132px;
-  text-align: center;
+  margin: 14px 0 0;
   font-family: 'Inter Tight', sans-serif;
   font-weight: 700;
-  font-size: 68px;
-  line-height: 76px;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1.08;
   letter-spacing: -0.035em;
   color: var(--white);
-  pointer-events: none;
-  z-index: 10;
 }
-.headline span { display: block; }
-.headline span:nth-child(2) { letter-spacing: -0.022em; color: var(--forest); text-shadow: 0 0 30px rgba(204,255,0,0.18); }
+.headline .accent { color: var(--forest); text-shadow: 0 0 30px rgba(204,255,0,0.18); }
 
-/* CURVED CYLINDER CAROUSEL */
+.carousel-stage {
+  flex: 1 1 auto;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 8px 0;
+}
 .carousel-viewport {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 300px;
-  height: 470px;
+  width: 100%;
+  height: min(52vh, 520px);
+  min-height: 360px;
   cursor: grab;
   user-select: none;
   touch-action: pan-y;
+  position: relative;
   z-index: 8;
   overflow: visible;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 7%, #000 93%, transparent 100%);
 }
 .carousel-viewport:active { cursor: grabbing; }
-
+.carousel-hint {
+  position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+  font-size: 12px; color: var(--muted); background: rgba(11,16,38,0.55);
+  border: 1px solid var(--line); padding: 6px 12px; border-radius: 999px; pointer-events: none;
+}
 .card-item {
-  position: absolute;
-  top: 0;
-  transform: translate3d(0,0,0);
+  position: absolute; top: 0; transform: translate3d(0,0,0);
   will-change: transform, width, height, opacity, filter;
-  border-radius: 20px;
-  overflow: hidden;
-  background: var(--surface-soft);
-  border: 1.5px solid rgba(204,255,0,0.22);
-  cursor: pointer;
+  border-radius: 20px; overflow: hidden; background: var(--surface-soft);
+  border: 1.5px solid rgba(204,255,0,0.22); cursor: pointer;
   box-shadow: 0 18px 40px rgba(2, 6, 23, 0.45);
   transition: box-shadow .25s ease, border-color .25s ease;
 }
-.card-item:hover {
-  border-color: rgba(204,255,0,0.55);
-  box-shadow: 0 24px 50px rgba(2, 6, 23, 0.55), 0 0 0 1px rgba(204,255,0,0.15) inset;
-}
-.card-inner {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-.card-inner img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-  transform: scale(1.02);
-  transition: transform .5s ease;
-}
+.card-item:hover { border-color: rgba(204,255,0,0.55); box-shadow: 0 24px 50px rgba(2,6,23,.55), 0 0 0 1px rgba(204,255,0,.15) inset; }
+.card-inner { position: absolute; inset: 0; overflow: hidden; }
+.card-inner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; transform: scale(1.02); transition: transform .5s ease; }
 .card-item:hover .card-inner img { transform: scale(1.08); }
-.card-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(11,16,38,0.92) 0%, rgba(11,16,38,0.55) 38%, rgba(11,16,38,0.05) 70%);
-  pointer-events: none;
-}
-.card-meta {
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  bottom: 14px;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  pointer-events: none;
-}
-.card-cat {
-  display: inline-flex;
-  align-self: flex-start;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(204,255,0,0.92);
-  color: #0B1026;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-.card-name {
-  color: var(--white);
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 1.25;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.35);
-}
-.card-price {
-  color: var(--forest);
-  font-weight: 700;
-  font-size: 13px;
-}
-.play-badge {
-  position: absolute;
-  right: 12px;
-  top: 12px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(247,250,255,0.92);
-  display: grid;
-  place-items: center;
-  color: #0B1026;
-  font-size: 0.8rem;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-  z-index: 3;
-}
+.card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(11,16,38,0.94) 0%, rgba(11,16,38,0.5) 40%, rgba(11,16,38,0.05) 72%); pointer-events: none; }
+.card-meta { position: absolute; left: 14px; right: 14px; bottom: 14px; z-index: 2; display: flex; flex-direction: column; gap: 4px; pointer-events: none; }
+.card-cat { display: inline-flex; align-self: flex-start; padding: 4px 10px; border-radius: 999px; background: rgba(204,255,0,0.92); color: #0B1026; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+.card-name { color: var(--white); font-weight: 700; font-size: 15px; line-height: 1.25; text-shadow: 0 2px 8px rgba(0,0,0,.35); }
+.card-price { color: var(--forest); font-weight: 700; font-size: 13px; }
+.add-badge { position: absolute; right: 12px; top: 12px; width: 34px; height: 34px; border-radius: 50%; background: var(--forest); display: grid; place-items: center; color: #0B1026; font-size: 1.1rem; font-weight: 800; box-shadow: 0 6px 16px rgba(204,255,0,.3); z-index: 3; }
 
-/* SUBLINE */
-.subline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 800px;
+.bottom-bar {
+  padding: 8px 20px 22px;
   text-align: center;
-  font-size: 19px;
-  line-height: 28px;
-  color: var(--muted);
-  font-weight: 400;
-  pointer-events: none;
   z-index: 10;
 }
+.subline { font-size: 17px; line-height: 1.5; color: var(--muted); margin: 0 auto 14px; max-width: 760px; }
+.cta-wrap { position: relative; width: 190px; height: 72px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+.cta-ring { position: absolute; inset: 0; border: 1.5px dashed rgba(204,255,0,0.7); border-radius: 99px; animation: spin 28s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.pill-cta { width: 172px; height: 56px; border-radius: 99px; background: var(--forest); color: #0B1026; font-weight: 800; font-size: 16px; letter-spacing: .04em; box-shadow: 0 12px 30px rgba(204,255,0,.25); z-index: 2; }
+.pill-cta:hover { background: var(--forest-dark); transform: translateY(-1px); }
 
-/* HAND-DRAWN NOTES & ARROWS */
-.note-doodle {
-  position: absolute;
-  font-family: 'Caveat', cursive;
-  font-weight: 600;
-  color: var(--forest);
-  pointer-events: none;
-  font-size: 25px;
-  line-height: 1.1;
-  white-space: pre-wrap;
-  z-index: 10;
-  text-shadow: 0 0 18px rgba(204,255,0,0.15);
-}
-svg.doodle-svg {
-  position: absolute;
-  inset: 0;
-  width: 1440px;
-  height: 1080px;
-  pointer-events: none;
-  z-index: 9;
-}
-svg.doodle-svg path {
-  fill: none;
-  stroke: var(--forest);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  animation: drawStroke 1.4s ease forwards 0.6s;
-}
-@keyframes drawStroke { to { stroke-dashoffset: 0; } }
-
-/* CTA */
-.cta-wrap {
-  position: absolute;
-  left: 625px;
-  top: 930px;
-  width: 190px;
-  height: 74px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 12;
-}
-.cta-outline-ring {
-  position: absolute;
-  inset: 0;
-  border: 1.5px dashed rgba(204,255,0,0.7);
-  border-radius: 99px;
-  animation: spinRing 28s linear infinite;
-}
-@keyframes spinRing { to { transform: rotate(360deg); } }
-.pill-cta {
-  width: 172px;
-  height: 58px;
-  border-radius: 99px;
-  background: var(--forest);
-  color: #0B1026;
-  font-weight: 800;
-  font-size: 16px;
-  letter-spacing: 0.04em;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 12px 30px rgba(204,255,0,0.25);
-  transition: transform .2s ease, background .2s ease;
-  z-index: 2;
-}
-.pill-cta:hover { transform: translateY(-2px) scale(1.01); background: var(--forest-dark); }
-
-/* FLOATING CART BAR */
 .cart-bar {
-  position: fixed;
-  left: 50%;
-  bottom: 20px;
-  transform: translateX(-50%);
-  z-index: 80;
-  background: var(--forest);
-  color: #0B1026;
-  padding: 14px 26px;
-  border-radius: 99px;
-  font-weight: 800;
-  font-size: 0.95rem;
-  box-shadow: 0 14px 40px rgba(204,255,0,0.25);
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  white-space: nowrap;
-  transition: transform .2s ease, background .2s ease;
+  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+  z-index: 80; background: var(--forest); color: #0B1026;
+  padding: 14px 24px; border-radius: 99px; font-weight: 800; font-size: .95rem;
+  box-shadow: 0 14px 40px rgba(204,255,0,0.25); display: flex; align-items: center; gap: 12px; white-space: nowrap;
 }
 .cart-bar:hover { background: var(--forest-dark); transform: translateX(-50%) translateY(-2px); }
 .cart-bar[hidden] { display: none; }
 
-/* MODALS */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: rgba(4, 8, 22, 0.72);
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
+.modal-backdrop { position: fixed; inset: 0; z-index: 100; background: rgba(4,8,22,.75); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; padding: 16px; }
 .modal-backdrop[hidden] { display: none; }
-.modal-card {
-  background: linear-gradient(180deg, #121A33 0%, #0F1730 100%);
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  width: min(680px, 100%);
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 30px;
-  box-shadow: var(--shadow);
-  color: var(--ink);
-}
-.modal-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 12px;
-}
-.modal-head h3 {
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 1.7rem;
-  margin: 0;
-  color: var(--white);
-}
-.close-x {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(247,250,255,0.08);
-  color: var(--white);
-  font-weight: 700;
-  display: grid;
-  place-items: center;
-  flex: none;
-}
+.modal-card { background: linear-gradient(180deg, #121A33 0%, #0F1730 100%); border: 1px solid var(--line); border-radius: 24px; width: min(720px, 100%); max-height: 92vh; overflow-y: auto; padding: 28px; box-shadow: var(--shadow); color: var(--ink); }
+.modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; }
+.modal-head h3 { font-family: 'Inter Tight', sans-serif; font-size: 1.6rem; margin: 0; color: var(--white); }
+.close-x { width: 40px; height: 40px; border-radius: 50%; background: rgba(247,250,255,0.08); color: var(--white); font-weight: 700; display: grid; place-items: center; flex: none; }
 .close-x:hover { background: rgba(204,255,0,0.18); color: var(--forest); }
+.field-group { margin-top: 14px; }
+.field-group label { display: block; font-size: .78rem; font-weight: 700; color: var(--forest); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; }
+.field-group input, .field-group select, .field-group textarea, .admin-input {
+  width: 100%; background: rgba(247,250,255,0.05); border: 1px solid var(--line); border-radius: 12px;
+  padding: 11px 13px; color: var(--white); font-size: .95rem;
+}
+.field-group input::placeholder, .admin-input::placeholder { color: #8fa0c7; }
+.field-group input:focus, .field-group select:focus, .field-group textarea:focus, .admin-input:focus {
+  outline: none; border-color: rgba(204,255,0,0.7); box-shadow: 0 0 0 3px rgba(204,255,0,0.12);
+}
+select option { background: #121A33; color: #F7FAFF; }
+.cart-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.qty-stepper { display: flex; align-items: center; gap: 8px; background: rgba(247,250,255,0.06); border: 1px solid var(--line); border-radius: 99px; padding: 4px 8px; }
+.qty-btn { width: 26px; height: 26px; border-radius: 50%; background: var(--forest); color: #0B1026; font-weight: 800; display: grid; place-items: center; }
 
-.field-group { margin-top: 16px; }
-.field-group label {
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--forest);
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.field-group input, .field-group select, .field-group textarea {
-  width: 100%;
-  background: rgba(247,250,255,0.04);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 12px 14px;
-  color: var(--white);
-  font-size: 0.95rem;
-}
-.field-group input::placeholder { color: #8fa0c7; }
-.field-group input:focus, .field-group select:focus, .field-group textarea:focus {
-  outline: none;
-  border-color: rgba(204,255,0,0.7);
-  box-shadow: 0 0 0 3px rgba(204,255,0,0.12);
-}
-
-.cart-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px dashed var(--line);
-}
-.qty-stepper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(247,250,255,0.06);
-  border: 1px solid var(--line);
-  border-radius: 99px;
-  padding: 4px 8px;
-}
-.qty-btn {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--forest);
-  color: #0B1026;
-  font-weight: 800;
-  display: grid;
-  place-items: center;
-}
-
-/* ADMIN MODAL */
-.admin-modal { width: min(1000px, 100%); }
-.admin-tabs {
-  display: flex;
-  gap: 10px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-.admin-tab {
-  padding: 10px 16px;
-  border-radius: 10px;
-  background: rgba(247,250,255,0.06);
-  color: var(--muted);
-  font-weight: 600;
-  font-size: 0.88rem;
-  border: 1px solid transparent;
-}
-.admin-tab.active {
-  background: rgba(204,255,0,0.14);
-  color: var(--forest);
-  border-color: rgba(204,255,0,0.35);
-}
+.admin-modal { width: min(1040px, 100%); }
+.admin-tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--line); padding-bottom: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.admin-tab { padding: 10px 14px; border-radius: 10px; background: rgba(247,250,255,0.06); color: var(--muted); font-weight: 600; font-size: .86rem; border: 1px solid transparent; }
+.admin-tab.active { background: rgba(204,255,0,0.14); color: var(--forest); border-color: rgba(204,255,0,0.35); }
 .admin-section { display: none; }
 .admin-section.active { display: block; }
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-}
-.admin-table th {
-  text-align: left;
-  padding: 10px;
-  color: var(--forest);
-  border-bottom: 2px solid var(--line);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
-.admin-table td {
-  padding: 10px;
-  border-bottom: 1px solid var(--line);
-  vertical-align: middle;
-}
-.admin-input {
-  width: 120px;
-  padding: 8px 10px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  font-weight: 600;
-  background: rgba(247,250,255,0.04);
-  color: var(--white);
-}
-.toast {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  z-index: 150;
-  background: var(--forest);
-  color: #0B1026;
-  padding: 14px 20px;
-  border-radius: 14px;
-  font-weight: 700;
-  box-shadow: 0 12px 30px rgba(204,255,0,0.25);
-  display: none;
-  max-width: min(360px, calc(100vw - 32px));
-}
+.admin-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.admin-table th { text-align: left; padding: 10px; color: var(--forest); border-bottom: 2px solid var(--line); font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+.admin-table td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.toast { position: fixed; top: 20px; right: 20px; z-index: 150; background: var(--forest); color: #0B1026; padding: 14px 18px; border-radius: 14px; font-weight: 700; box-shadow: 0 12px 30px rgba(204,255,0,0.25); display: none; max-width: min(360px, calc(100vw - 32px)); }
 .toast.show { display: block; animation: toastIn .25s ease; }
-@keyframes toastIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastIn { from { opacity:0; transform:translateY(-6px);} to {opacity:1; transform:translateY(0);} }
 
-/* RESPONSIVE */
-@media (max-width: 820px) {
-  .frame-wrap { height: auto; overflow: visible; padding: 0; align-items: flex-start; }
-  .frame {
-    width: 100% !important;
-    height: auto !important;
-    min-height: 100svh;
-    padding: 18px 14px 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .logo, .nav-links, .top-btns, .mint-badge, .headline, .carousel-viewport, .subline, .cta-wrap, .note-doodle, svg.doodle-svg {
-    position: relative;
-    left: auto; right: auto; top: auto; bottom: auto; transform: none;
-  }
-  .logo { align-self: flex-start; margin-bottom: 10px; }
+@media (max-width: 900px) {
   .nav-links { display: none; }
-  .top-btns { position: absolute; right: 14px; top: 16px; }
-  .top-btns .pill-login { display: none; }
-  .mint-badge {
-    margin: 10px auto 14px;
-    height: auto;
-    padding: 8px 14px;
-    font-size: 13px;
-    white-space: normal;
-    text-align: center;
-    line-height: 1.3;
-  }
-  .headline {
-    font-size: clamp(34px, 9vw, 46px);
-    line-height: 1.08;
-    margin: 0 0 12px;
-    padding: 0 6px;
-  }
-  .carousel-viewport {
-    width: 100%;
-    height: 380px;
-    margin: 6px 0 8px;
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%);
-  }
-  .subline {
-    font-size: 15.5px;
-    line-height: 1.45;
-    margin: 6px 0 18px;
-    padding: 0 8px;
-    max-width: 520px;
-  }
-  .note-doodle, svg.doodle-svg { display: none; }
-  .cta-wrap { margin: 0 auto; }
-  .modal-card { padding: 22px 18px; border-radius: 20px; }
-  .admin-table { font-size: 0.82rem; }
-  .cart-bar { width: calc(100% - 24px); justify-content: center; font-size: 0.88rem; padding: 13px 16px; gap: 10px; }
+}
+@media (max-width: 820px) {
+  .topbar { padding: 14px 14px 4px; flex-wrap: wrap; }
+  .brand { font-size: 1.15rem; }
+  .top-actions { gap: 8px; }
+  .pill { min-width: 0; height: 38px; padding: 0 14px; font-size: 13px; }
+  .hero { padding: 4px 14px 0; }
+  .headline { font-size: clamp(32px, 9vw, 44px); }
+  .mint-badge { font-size: 13px; padding: 7px 14px; }
+  .carousel-viewport { height: 46vh; min-height: 330px; -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 3%, #000 97%, transparent 100%); mask-image: linear-gradient(to right, transparent 0%, #000 3%, #000 97%, transparent 100%); }
+  .subline { font-size: 15px; padding: 0 6px; }
+  .bottom-bar { padding-bottom: 96px; }
+  .modal-card { padding: 20px 16px; border-radius: 20px; }
+  .cart-bar { width: calc(100% - 24px); justify-content: center; font-size: .86rem; padding: 13px 14px; gap: 8px; }
+  .admin-table { font-size: .82rem; }
+  .admin-table th, .admin-table td { padding: 8px 6px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
@@ -637,790 +245,436 @@ svg.doodle-svg path {
 </style>
 </head>
 <body>
-
 <div id="toast" class="toast"></div>
 
-<div class="frame-wrap" id="frameWrap">
-  <div class="frame" id="frame">
-
-    <a href="#top" class="logo">
-      <div class="logo-icon">☕</div>
-      <span>Moin's Cafe</span>
-    </a>
-
+<div class="app">
+  <header class="topbar">
+    <a href="#top" class="brand"><div class="logo-icon">☕</div><span id="siteName">Moin's Cafe</span></a>
     <nav class="nav-links">
-      <a href="#carousel-menu" onclick="openMenuModal(); return false;">MENU</a>
-      <a href="#carousel-menu" onclick="openMenuModal(); return false;">Burgers &amp; Grills</a>
-      <a href="#carousel-menu" onclick="openMenuModal(); return false;">Fresh Juices</a>
-      <a href="#carousel-menu" onclick="openMenuModal(); return false;">Coffee &amp; Shakes</a>
+      <a href="#menu" onclick="openMenuModal(); return false;">MENU</a>
+      <a href="#menu" onclick="openMenuModal(); return false;">Burgers &amp; Grills</a>
+      <a href="#menu" onclick="openMenuModal(); return false;">Fresh Juices</a>
+      <a href="#menu" onclick="openMenuModal(); return false;">Coffee &amp; Shakes</a>
     </nav>
-
-    <div class="top-btns">
-      <button type="button" class="pill-login" onclick="openAdminLoginModal()">Admin</button>
-      <button type="button" class="pill-signup" onclick="openMenuModal()">Order</button>
+    <div class="top-actions">
+      <button type="button" class="pill pill-ghost" onclick="openAdminLoginModal()">Admin</button>
+      <button type="button" class="pill pill-lime" onclick="openMenuModal()">Menu</button>
     </div>
+  </header>
 
-    <div class="mint-badge">Freshly Prepared Daily in Kampala • 4.9★ Rated</div>
+  <section class="hero">
+    <div class="mint-badge" id="siteBadge">Freshly Prepared Daily in Kampala • 4.9★ Rated</div>
+    <h1 class="headline"><span id="headline1">Crave Bold Flavors</span><br><span class="accent" id="headline2">with Snackable Bites</span></h1>
+  </section>
 
-    <h1 class="headline">
-      <span>Crave Bold Flavors</span>
-      <span>with Snackable Bites</span>
-    </h1>
-
-    <div class="note-doodle" style="left:210px; top:252px; transform:rotate(-8deg);">//</div>
-    <div class="note-doodle" style="left:1185px; top:238px; transform:rotate(14deg);">Swipe dish cards<br/>by category</div>
-    <div class="note-doodle" style="left:500px; top:955px; transform:rotate(18deg);">Order fast</div>
-
-    <svg class="doodle-svg" viewBox="0 0 1440 1080" aria-hidden="true">
-      <path d="M 1195 282 Q 1110 330 1010 372" />
-      <path d="M 505 948 Q 555 940 610 944" />
-    </svg>
-
+  <section class="carousel-stage">
     <div class="carousel-viewport" id="carouselViewport" aria-label="Dish category carousel"></div>
+    <div class="carousel-hint">Tap a dish card to add it to your cart</div>
+  </section>
 
-    <div class="subline">
-      Browse dish cards by category in a smooth curved carousel.<br/>
-      Tap any card to explore the menu and order instantly on WhatsApp.
-    </div>
-
+  <section class="bottom-bar">
+    <p class="subline" id="siteSubline">Browse dish cards by category in a smooth curved carousel.<br/>Tap any card to add it to your cart and order instantly on WhatsApp.</p>
     <div class="cta-wrap">
-      <div class="cta-outline-ring"></div>
-      <button type="button" class="pill-cta" onclick="openMenuModal()">MENU</button>
+      <div class="cta-ring"></div>
+      <button type="button" class="pill-cta" onclick="openCartModal()">CART</button>
     </div>
-
-  </div>
+  </section>
 </div>
 
 <button id="cartBar" class="cart-bar" hidden onclick="openCartModal()">
-  <span id="cartBarCount">0 items</span>
-  <span>•</span>
-  <span id="cartBarTotal">UGX 0</span>
-  <span>→ View Order</span>
+  <span id="cartBarCount">0 items</span><span>•</span><span id="cartBarTotal">UGX 0</span><span>→ View Cart</span>
 </button>
 
 <div id="menuModal" class="modal-backdrop" hidden>
   <div class="modal-card">
-    <div class="modal-head">
-      <h3 id="menuModalTitle">Moin's Cafe Menu &amp; Order</h3>
-      <button type="button" class="close-x" onclick="closeMenuModal()">✕</button>
-    </div>
+    <div class="modal-head"><h3 id="menuModalTitle">Menu</h3><button type="button" class="close-x" onclick="closeMenuModal()">✕</button></div>
     <div id="menuModalBody"></div>
   </div>
 </div>
 
 <div id="cartModal" class="modal-backdrop" hidden>
   <div class="modal-card">
-    <div class="modal-head">
-      <h3>Your WhatsApp Order</h3>
-      <button type="button" class="close-x" onclick="closeCartModal()">✕</button>
-    </div>
+    <div class="modal-head"><h3>Your Order</h3><button type="button" class="close-x" onclick="closeCartModal()">✕</button></div>
     <div id="cartItemsList"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;font-size:1.2rem;font-weight:800;border-top:2px solid var(--line);margin-top:10px;">
-      <span>Total</span>
-      <span id="cartModalTotal" style="color:var(--forest);">UGX 0</span>
+      <span>Total</span><span id="cartModalTotal" style="color:var(--forest);">UGX 0</span>
     </div>
-
-    <div class="field-group">
-      <label>Order Type</label>
-      <select id="orderType">
-        <option value="Delivery">Delivery in Kampala</option>
-        <option value="Pickup">Pickup at Moin's Cafe</option>
-        <option value="Dine-In">Dine-In</option>
-      </select>
-    </div>
-    <div class="field-group">
-      <label>Your Name</label>
-      <input type="text" id="custName" placeholder="e.g. David K."/>
-    </div>
-    <div class="field-group">
-      <label>Delivery Address / Table Number</label>
-      <input type="text" id="custAddress" placeholder="e.g. Kololo, Bukoto, Ntinda..."/>
-    </div>
-
-    <button type="button" class="pill-signup" style="width:100%;height:52px;margin-top:20px;font-size:1rem;" onclick="sendWhatsAppOrder()">
-      💬 Send Order via WhatsApp (+256 749 632 497)
-    </button>
+    <div class="field-group"><label>Order Type</label><select id="orderType"><option value="Delivery">Delivery in Kampala</option><option value="Pickup">Pickup</option><option value="Dine-In">Dine-In</option></select></div>
+    <div class="field-group"><label>Your Name</label><input type="text" id="custName" placeholder="e.g. David K."/></div>
+    <div class="field-group"><label>Delivery Address / Table Number</label><input type="text" id="custAddress" placeholder="e.g. Kololo, Bukoto, Ntinda..."/></div>
+    <button type="button" class="pill-lime" style="width:100%;height:52px;margin-top:20px;font-size:1rem;border-radius:14px;" onclick="sendWhatsAppOrder()">💬 Send Order via WhatsApp</button>
   </div>
 </div>
 
 <div id="adminLoginModal" class="modal-backdrop" hidden>
   <div class="modal-card" style="max-width:400px;text-align:center;">
-    <div class="modal-head" style="justify-content:flex-end;margin-bottom:10px;">
-      <button type="button" class="close-x" onclick="closeAdminLoginModal()">✕</button>
+    <div class="modal-head" style="justify-content:flex-end;margin-bottom:8px;"><button type="button" class="close-x" onclick="closeAdminLoginModal()">✕</button></div>
+    <div style="font-size:2.3rem;margin-bottom:8px;">🔐</div>
+    <h3 style="font-family:'Inter Tight',sans-serif;color:var(--white);margin:0 0 6px;">Admin Access</h3>
+    <p style="color:var(--muted);font-size:.86rem;margin:0 0 18px;">Enter PIN to manage menu, categories, and site content.</p>
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:18px;" id="pinDots">
+      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
+      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
+      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
+      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
+      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
+      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
+      <div class="pindot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);"></div>
     </div>
-    <div style="font-size:2.4rem;margin-bottom:8px;">🔐</div>
-    <h3 style="font-family:'Inter Tight',sans-serif;color:var(--white);margin:0 0 6px;">Secure Admin Access</h3>
-    <p style="color:var(--muted);font-size:0.86rem;margin:0 0 20px;">Enter security PIN to manage menu and pricing.</p>
-
-    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:20px;" id="pinDots">
-      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);background:transparent;" class="pindot"></div>
-      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);background:transparent;" class="pindot"></div>
-      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);background:transparent;" class="pindot"></div>
-      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);background:transparent;" class="pindot"></div>
-      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);background:transparent;" class="pindot"></div>
-      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);background:transparent;" class="pindot"></div>
-      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--forest);background:transparent;" class="pindot"></div>
-    </div>
-
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:260px;margin:auto;">
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:1.2rem;font-weight:700;" onclick="pressPin('1')">1</button>
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:1.2rem;font-weight:700;" onclick="pressPin('2')">2</button>
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:1.2rem;font-weight:700;" onclick="pressPin('3')">3</button>
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:1.2rem;font-weight:700;" onclick="pressPin('4')">4</button>
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:1.2rem;font-weight:700;" onclick="pressPin('5')">5</button>
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:1.2rem;font-weight:700;" onclick="pressPin('6')">6</button>
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:1.2rem;font-weight:700;" onclick="pressPin('7')">7</button>
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:1.2rem;font-weight:700;" onclick="pressPin('8')">8</button>
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:1.2rem;font-weight:700;" onclick="pressPin('9')">9</button>
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:0.9rem;font-weight:700;color:var(--muted);" onclick="clearPin()">C</button>
-      <button type="button" class="pill-login" style="width:100%;height:50px;font-size:1.2rem;font-weight:700;" onclick="pressPin('0')">0</button>
-      <button type="button" class="pill-signup" style="width:100%;height:50px;font-size:0.9rem;" onclick="submitPin()">✓</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-size:1.15rem;font-weight:700;" onclick="pressPin('1')">1</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-size:1.15rem;font-weight:700;" onclick="pressPin('2')">2</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-size:1.15rem;font-weight:700;" onclick="pressPin('3')">3</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-size:1.15rem;font-weight:700;" onclick="pressPin('4')">4</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-size:1.15rem;font-weight:700;" onclick="pressPin('5')">5</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-size:1.15rem;font-weight:700;" onclick="pressPin('6')">6</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-size:1.15rem;font-weight:700;" onclick="pressPin('7')">7</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-size:1.15rem;font-weight:700;" onclick="pressPin('8')">8</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-size:1.15rem;font-weight:700;" onclick="pressPin('9')">9</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-weight:700;" onclick="clearPin()">C</button>
+      <button type="button" class="pill-ghost" style="height:48px;border-radius:12px;font-size:1.15rem;font-weight:700;" onclick="pressPin('0')">0</button>
+      <button type="button" class="pill-lime" style="height:48px;border-radius:12px;font-weight:800;" onclick="submitPin()">✓</button>
     </div>
-    <p id="pinErrorMsg" style="color:var(--magenta);font-size:0.82rem;font-weight:600;margin-top:12px;min-height:18px;"></p>
+    <p id="pinErrorMsg" style="color:var(--magenta);font-size:.82rem;font-weight:600;margin-top:12px;min-height:18px;"></p>
   </div>
 </div>
 
 <div id="adminDashboardModal" class="modal-backdrop" hidden>
   <div class="modal-card admin-modal">
     <div class="modal-head">
-      <div>
-        <span style="font-size:0.72rem;font-weight:700;color:var(--forest);text-transform:uppercase;letter-spacing:0.1em;">Control Center</span>
-        <h3 style="margin:2px 0 0;">Moin's Cafe Admin Backend</h3>
-      </div>
+      <div><span style="font-size:.72rem;font-weight:700;color:var(--forest);text-transform:uppercase;letter-spacing:.1em;">Control Center</span><h3 style="margin:2px 0 0;">Admin Dashboard</h3></div>
       <button type="button" class="close-x" onclick="closeAdminDashboardModal()">✕</button>
     </div>
-
     <div class="admin-tabs">
-      <button type="button" class="admin-tab active" onclick="switchAdminTab(event,'prices')">💰 Edit Menu & Prices</button>
-      <button type="button" class="admin-tab" onclick="switchAdminTab(event,'categories')">📁 Manage Categories</button>
-      <button type="button" class="admin-tab" onclick="switchAdminTab(event,'security')">🔐 Admin Password</button>
+      <button type="button" class="admin-tab active" onclick="switchAdminTab(event,'prices')">💰 Menu & Prices</button>
+      <button type="button" class="admin-tab" onclick="switchAdminTab(event,'categories')">📁 Categories</button>
+      <button type="button" class="admin-tab" onclick="switchAdminTab(event,'site')">🖥️ Site Settings</button>
+      <button type="button" class="admin-tab" onclick="switchAdminTab(event,'security')">🔐 Password</button>
     </div>
 
     <div id="admin-sec-prices" class="admin-section active">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-        <p style="margin:0;color:var(--muted);font-size:0.9rem;">Add items, edit prices, or upload photos from your device.</p>
-        <button type="button" class="pill-signup" style="height:38px;padding:0 16px;font-size:0.82rem;" onclick="saveAllAdminPrices()">Save All Changes</button>
+        <p style="margin:0;color:var(--muted);font-size:.9rem;">Add items, edit names/prices/descriptions/photos.</p>
+        <button type="button" class="pill-lime" style="height:38px;padding:0 16px;font-size:.82rem;border-radius:10px;" onclick="saveAllAdminPrices()">Save Menu Changes</button>
       </div>
-
-      <div style="background:rgba(247,250,255,0.04);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:20px;">
+      <div style="background:rgba(247,250,255,0.04);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:18px;">
         <h4 style="margin:0 0 10px;color:var(--forest);">+ Add New Menu Item</h4>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <input type="text" id="newItName" placeholder="Item Name" class="admin-input" style="width:100%;"/>
-          <select id="newItCat" class="admin-input" style="width:100%;"></select>
-          <input type="number" id="newItPrice" placeholder="Price in UGX" class="admin-input" style="width:100%;" step="500"/>
-          <input type="file" id="newItFile" accept="image/*" class="admin-input" style="width:100%;padding:6px;"/>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;">
+          <input type="text" id="newItName" placeholder="Item Name" class="admin-input"/>
+          <select id="newItCat" class="admin-input"></select>
+          <input type="number" id="newItPrice" placeholder="Price (UGX)" class="admin-input" step="500"/>
+          <input type="file" id="newItFile" accept="image/*" class="admin-input" style="padding:7px;"/>
         </div>
-        <input type="text" id="newItDesc" placeholder="Short description..." class="admin-input" style="width:100%;margin-top:10px;"/>
-        <button type="button" class="pill-signup" style="height:38px;padding:0 16px;font-size:0.82rem;margin-top:10px;" onclick="addNewMenuItem()">Add Item</button>
+        <input type="text" id="newItDesc" placeholder="Short description..." class="admin-input" style="margin-top:10px;"/>
+        <button type="button" class="pill-lime" style="height:38px;padding:0 16px;font-size:.82rem;margin-top:10px;border-radius:10px;" onclick="addNewMenuItem()">Add Item</button>
       </div>
-
-      <div style="max-height:400px;overflow:auto;">
+      <div style="max-height:42vh;overflow:auto;">
         <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Photo</th>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Price (UGX)</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Photo</th><th>Name & Desc</th><th>Category</th><th>Price (UGX)</th><th>Action</th></tr></thead>
           <tbody id="adminPriceTableBody"></tbody>
         </table>
       </div>
     </div>
 
     <div id="admin-sec-categories" class="admin-section">
-      <h4 style="margin-top:0;color:var(--forest);">Manage Menu Categories</h4>
-      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-        <input type="text" id="newCategoryName" placeholder="New category name (e.g. Signature Pizzas)" class="admin-input" style="flex:1;min-width:220px;width:auto;"/>
-        <button type="button" class="pill-signup" style="height:42px;padding:0 20px;" onclick="addNewCategory()">Add Category</button>
+      <h4 style="margin-top:0;color:var(--forest);">Manage Categories</h4>
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <input type="text" id="newCategoryName" placeholder="New category name" class="admin-input" style="flex:1;min-width:220px;width:auto;"/>
+        <button type="button" class="pill-lime" style="height:42px;padding:0 18px;border-radius:10px;" onclick="addNewCategory()">Add</button>
       </div>
       <div id="adminCategoryList" style="display:flex;flex-direction:column;gap:8px;"></div>
     </div>
 
-    <div id="admin-sec-security" class="admin-section">
-      <h4 style="margin-top:0;color:var(--forest);">Change Admin Password</h4>
-      <div style="max-width:380px;">
-        <div class="field-group">
-          <label>New Password / PIN</label>
-          <input type="password" id="newPass1" placeholder="Enter new password"/>
-        </div>
-        <div class="field-group">
-          <label>Confirm Password</label>
-          <input type="password" id="newPass2" placeholder="Confirm new password"/>
-        </div>
-        <button type="button" class="pill-signup" style="height:42px;margin-top:16px;" onclick="updateAdminPassword()">Update Password</button>
+    <div id="admin-sec-site" class="admin-section">
+      <h4 style="margin-top:0;color:var(--forest);">Edit Site Content</h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;">
+        <div class="field-group"><label>Cafe Name</label><input type="text" id="siteCafeName" class="admin-input"/></div>
+        <div class="field-group"><label>WhatsApp Number (digits only)</label><input type="text" id="siteWhatsapp" class="admin-input"/></div>
+        <div class="field-group" style="grid-column:1/-1"><label>Badge Text</label><input type="text" id="siteBadgeText" class="admin-input"/></div>
+        <div class="field-group"><label>Headline Line 1</label><input type="text" id="siteHeadline1" class="admin-input"/></div>
+        <div class="field-group"><label>Headline Line 2 (accent)</label><input type="text" id="siteHeadline2" class="admin-input"/></div>
+        <div class="field-group" style="grid-column:1/-1"><label>Subline (use | for line break)</label><textarea id="siteSublineText" class="admin-input" rows="3"></textarea></div>
       </div>
+      <button type="button" class="pill-lime" style="height:42px;padding:0 18px;margin-top:14px;border-radius:10px;" onclick="saveSiteSettings()">Save Site Settings</button>
+      <p style="color:var(--muted);font-size:.82rem;margin-top:10px;">Changes are saved on this device/browser and apply to desktop and mobile views.</p>
     </div>
 
+    <div id="admin-sec-security" class="admin-section">
+      <h4 style="margin-top:0;color:var(--forest);">Change Admin PIN/Password</h4>
+      <div style="max-width:380px;">
+        <div class="field-group"><label>New PIN/Password</label><input type="password" id="newPass1" class="admin-input" placeholder="At least 4 characters"/></div>
+        <div class="field-group"><label>Confirm</label><input type="password" id="newPass2" class="admin-input" placeholder="Confirm"/></div>
+        <button type="button" class="pill-lime" style="height:42px;margin-top:14px;border-radius:10px;" onclick="updateAdminPassword()">Update Password</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-const WHATSAPP_NUMBER = "256749632497";
 const STORAGE_KEYS = {
-  MENU: "moinscafe_menu_v7",
-  CATS: "moinscafe_cats_v7",
-  PASS: "moinscafe_pass_v7",
-  CART: "moinscafe_cart_v7"
+  MENU: "moinscafe_menu_v8",
+  CATS: "moinscafe_cats_v8",
+  PASS: "moinscafe_pass_v8",
+  CART: "moinscafe_cart_v8",
+  SITE: "moinscafe_site_v8"
 };
-
-const DEFAULT_CATEGORIES = [
-  "Burgers & Wraps",
-  "Chicken & Grills",
-  "Fries & Platters",
-  "Fresh Juices & Shakes",
-  "Coffee & Hot Drinks"
-];
-
+const DEFAULT_SITE = {
+  cafeName: "Moin's Cafe",
+  whatsapp: "256749632497",
+  badge: "Freshly Prepared Daily in Kampala • 4.9★ Rated",
+  headline1: "Crave Bold Flavors",
+  headline2: "with Snackable Bites",
+  subline: "Browse dish cards by category in a smooth curved carousel.|Tap any card to add it to your cart and order instantly on WhatsApp."
+};
+const DEFAULT_CATEGORIES = ["Burgers & Wraps","Chicken & Grills","Fries & Platters","Fresh Juices & Shakes","Coffee & Hot Drinks"];
 const DEFAULT_MENU = [
-  { id: "b1", name: "Moin's Classic Beef Burger", category: "Burgers & Wraps", price: 18000, desc: "Juicy grilled beef patty, cheddar cheese, crisp lettuce, tomato & house burger sauce.", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=85" },
-  { id: "b2", name: "Double Smash Cheese Burger", category: "Burgers & Wraps", price: 25000, desc: "Two seared beef patties, double melted cheddar, caramelized onions & smoky mayo.", img: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=900&q=85" },
-  { id: "c1", name: "Quarter Flame-Grilled Chicken", category: "Chicken & Grills", price: 18000, desc: "Chargrilled quarter chicken basted in peri-peri or BBQ glaze, served with fries.", img: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=900&q=85" },
-  { id: "c2", name: "Crispy Buffalo Wings (8 Pcs)", category: "Chicken & Grills", price: 22000, desc: "Crunchy fried chicken wings tossed in tangy buffalo or honey-chili sauce.", img: "https://images.unsplash.com/photo-1608039755401-742074f0548d?auto=format&fit=crop&w=900&q=85" },
-  { id: "f1", name: "Masala Spiced Chips", category: "Fries & Platters", price: 10000, desc: "Crispy golden fries tossed in rich Kampala-style tomato-chili masala glaze.", img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=85" },
-  { id: "f2", name: "Loaded Chicken & Cheese Fries", category: "Fries & Platters", price: 18000, desc: "Seasoned fries topped with diced grilled chicken, melted cheese sauce & jalapenos.", img: "https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=900&q=85" },
-  { id: "j1", name: "Fresh Passion & Mango Juice", category: "Fresh Juices & Shakes", price: 8000, desc: "100% pure cold-pressed Ugandan passion fruit and ripe mango blend.", img: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=900&q=85" },
-  { id: "j2", name: "Oreo Vanilla Thick Shake", category: "Fresh Juices & Shakes", price: 15000, desc: "Creamy vanilla ice cream blended with crushed Oreo cookies & whipped cream.", img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=900&q=85" },
-  { id: "h1", name: "Kampala Cappuccino", category: "Coffee & Hot Drinks", price: 9000, desc: "Freshly pulled Ugandan Arabica espresso topped with velvety steamed milk foam.", img: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=900&q=85" },
-  { id: "h2", name: "Spiced African Masala Tea", category: "Coffee & Hot Drinks", price: 8000, desc: "Aromatic black tea simmered with fresh ginger, cardamom, cinnamon & milk.", img: "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?auto=format&fit=crop&w=900&q=85" }
+  { id:"b1", name:"Moin's Classic Beef Burger", category:"Burgers & Wraps", price:18000, desc:"Juicy grilled beef patty, cheddar cheese, crisp lettuce, tomato & house burger sauce.", img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=85" },
+  { id:"b2", name:"Double Smash Cheese Burger", category:"Burgers & Wraps", price:25000, desc:"Two seared beef patties, double melted cheddar, caramelized onions & smoky mayo.", img:"https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=900&q=85" },
+  { id:"c1", name:"Quarter Flame-Grilled Chicken", category:"Chicken & Grills", price:18000, desc:"Chargrilled quarter chicken basted in peri-peri or BBQ glaze, served with fries.", img:"https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=900&q=85" },
+  { id:"c2", name:"Crispy Buffalo Wings (8 Pcs)", category:"Chicken & Grills", price:22000, desc:"Crunchy fried chicken wings tossed in tangy buffalo or honey-chili sauce.", img:"https://images.unsplash.com/photo-1608039755401-742074f0548d?auto=format&fit=crop&w=900&q=85" },
+  { id:"f1", name:"Masala Spiced Chips", category:"Fries & Platters", price:10000, desc:"Crispy golden fries tossed in rich Kampala-style tomato-chili masala glaze.", img:"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=85" },
+  { id:"f2", name:"Loaded Chicken & Cheese Fries", category:"Fries & Platters", price:18000, desc:"Seasoned fries topped with diced grilled chicken, melted cheese sauce & jalapenos.", img:"https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=900&q=85" },
+  { id:"j1", name:"Fresh Passion & Mango Juice", category:"Fresh Juices & Shakes", price:8000, desc:"100% pure cold-pressed Ugandan passion fruit and ripe mango blend.", img:"https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=900&q=85" },
+  { id:"j2", name:"Oreo Vanilla Thick Shake", category:"Fresh Juices & Shakes", price:15000, desc:"Creamy vanilla ice cream blended with crushed Oreo cookies & whipped cream.", img:"https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=900&q=85" },
+  { id:"h1", name:"Kampala Cappuccino", category:"Coffee & Hot Drinks", price:9000, desc:"Freshly pulled Ugandan Arabica espresso topped with velvety steamed milk foam.", img:"https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=900&q=85" },
+  { id:"h2", name:"Spiced African Masala Tea", category:"Coffee & Hot Drinks", price:8000, desc:"Aromatic black tea simmered with fresh ginger, cardamom, cinnamon & milk.", img:"https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?auto=format&fit=crop&w=900&q=85" }
 ];
 
+let siteSettings = Object.assign({}, DEFAULT_SITE, JSON.parse(localStorage.getItem(STORAGE_KEYS.SITE) || "{}"));
 let categories = JSON.parse(localStorage.getItem(STORAGE_KEYS.CATS)) || structuredClone(DEFAULT_CATEGORIES);
 let menuItems = JSON.parse(localStorage.getItem(STORAGE_KEYS.MENU)) || structuredClone(DEFAULT_MENU);
 let adminPassword = localStorage.getItem(STORAGE_KEYS.PASS) || "271024k";
 let cart = JSON.parse(localStorage.getItem(STORAGE_KEYS.CART)) || {};
 
-function formatUGX(num) {
-  return "UGX " + Number(num || 0).toLocaleString("en-UG");
-}
-function showToast(msg) {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
-}
-function saveState() {
+function formatUGX(n){ return "UGX " + Number(n||0).toLocaleString("en-UG"); }
+function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function showToast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove("show"),2200); }
+function saveState(){
   localStorage.setItem(STORAGE_KEYS.CATS, JSON.stringify(categories));
   localStorage.setItem(STORAGE_KEYS.MENU, JSON.stringify(menuItems));
   localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(cart));
+  localStorage.setItem(STORAGE_KEYS.SITE, JSON.stringify(siteSettings));
 }
-function escapeHtml(str) {
-  return String(str || "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+function applySiteSettings(){
+  document.getElementById("siteName").textContent = siteSettings.cafeName || DEFAULT_SITE.cafeName;
+  document.getElementById("siteBadge").textContent = siteSettings.badge || DEFAULT_SITE.badge;
+  document.getElementById("headline1").textContent = siteSettings.headline1 || DEFAULT_SITE.headline1;
+  document.getElementById("headline2").textContent = siteSettings.headline2 || DEFAULT_SITE.headline2;
+  const sub = (siteSettings.subline || DEFAULT_SITE.subline).split("|").map(escapeHtml).join("<br/>");
+  document.getElementById("siteSubline").innerHTML = sub;
+  document.title = `${siteSettings.cafeName || "Moin's Cafe"} | Kampala`;
 }
 
-/* FRAME SCALING */
-function resizeFrame() {
-  const wrap = document.getElementById("frameWrap");
-  const frame = document.getElementById("frame");
-  if (!wrap || !frame) return;
-  const scale = Math.min((window.innerWidth - 8) / 1440, (window.innerHeight - 8) / 1080);
-  if (window.innerWidth <= 820) {
-    frame.style.transform = "none";
-    frame.style.width = "100%";
-    frame.style.height = "auto";
-  } else {
-    frame.style.transform = `scale(${Math.max(0.4, scale)})`;
-    frame.style.width = "1440px";
-    frame.style.height = "1080px";
-  }
-}
-window.addEventListener("resize", resizeFrame);
-resizeFrame();
-
-/* CAROUSEL: dish cards by category in a smooth curved cylinder */
+/* CAROUSEL */
 const viewport = document.getElementById("carouselViewport");
-let cardElements = [];
-let cardData = [];
-let cardWidthPitch = 208;
-let totalSpan = 0;
-let scrollOffset = 0;
-let targetOffset = 0;
-let isDragging = false;
-let dragStartX = 0;
-let dragStartOffset = 0;
-let dragDeltaX = 0;
-let velocity = 0;
-let lastX = 0;
-let lastTime = 0;
+let cardElements=[], cardData=[], cardWidthPitch=208, totalSpan=0, scrollOffset=0, targetOffset=0;
+let isDragging=false, dragStartX=0, dragStartOffset=0, dragDeltaX=0, velocity=0, lastX=0, lastTime=0;
 
-function buildCarouselData() {
-  const list = [];
-  categories.forEach(cat => {
-    const items = menuItems.filter(m => m.category === cat);
-    items.forEach(item => list.push(item));
-  });
-  // fallback if empty categories/items
-  if (!list.length) list.push(...menuItems);
-  return list;
+function buildCarouselData(){
+  const list=[]; categories.forEach(cat=>menuItems.filter(m=>m.category===cat).forEach(i=>list.push(i)));
+  return list.length?list:[...menuItems];
 }
-
-function buildCarousel() {
-  if (!viewport) return;
+function buildCarousel(){
+  if(!viewport) return;
   cardData = buildCarouselData();
-  viewport.innerHTML = "";
-  cardElements = [];
-
-  const totalCards = cardData.length;
-  cardWidthPitch = window.innerWidth <= 820 ? 190 : 208;
-  totalSpan = totalCards * cardWidthPitch;
-  scrollOffset = totalSpan * 0.35;
-  targetOffset = scrollOffset;
-
-  cardData.forEach((dish) => {
-    const item = document.createElement("div");
-    item.className = "card-item";
-    item.innerHTML = `
-      <div class="card-inner">
-        <img src="${escapeHtml(dish.img)}" alt="${escapeHtml(dish.name)}" loading="lazy"/>
-        <div class="card-overlay"></div>
-        <div class="play-badge">▶</div>
-        <div class="card-meta">
-          <span class="card-cat">${escapeHtml(dish.category)}</span>
-          <div class="card-name">${escapeHtml(dish.name)}</div>
-          <div class="card-price">${formatUGX(dish.price)}</div>
-        </div>
-      </div>
-    `;
-    item.addEventListener("click", () => {
-      if (!isDragging && Math.abs(dragDeltaX) < 6) openMenuModal();
-    });
-    viewport.appendChild(item);
-    cardElements.push(item);
+  viewport.innerHTML=""; cardElements=[];
+  const total = cardData.length || 1;
+  cardWidthPitch = window.innerWidth <= 820 ? 185 : 212;
+  totalSpan = total * cardWidthPitch;
+  scrollOffset = totalSpan * 0.35; targetOffset = scrollOffset;
+  cardData.forEach(dish=>{
+    const el=document.createElement("div"); el.className="card-item";
+    el.innerHTML = `<div class="card-inner">
+      <img src="${escapeHtml(dish.img)}" alt="${escapeHtml(dish.name)}" loading="lazy"/>
+      <div class="card-overlay"></div><div class="add-badge">+</div>
+      <div class="card-meta"><span class="card-cat">${escapeHtml(dish.category)}</span><div class="card-name">${escapeHtml(dish.name)}</div><div class="card-price">${formatUGX(dish.price)}</div></div>
+    </div>`;
+    el.addEventListener("click", ()=>{ if(!isDragging && Math.abs(dragDeltaX)<6){ changeQty(dish.id,1); showToast(`Added: ${dish.name}`); } });
+    viewport.appendChild(el); cardElements.push(el);
   });
 }
+viewport.addEventListener("pointerdown",(e)=>{ isDragging=true; dragStartX=e.clientX; dragStartOffset=targetOffset; lastX=e.clientX; lastTime=performance.now(); dragDeltaX=0; velocity=0; viewport.setPointerCapture(e.pointerId); });
+viewport.addEventListener("pointermove",(e)=>{ if(!isDragging) return; const now=performance.now(); const dt=Math.max(1,now-lastTime); const dx=e.clientX-lastX; velocity=(dx/dt)*16.66; lastX=e.clientX; lastTime=now; dragDeltaX=e.clientX-dragStartX; targetOffset=dragStartOffset-dragDeltaX; });
+function endDrag(e){ if(!isDragging) return; isDragging=false; targetOffset -= velocity*14; velocity=0; try{viewport.releasePointerCapture(e.pointerId);}catch(_){} }
+viewport.addEventListener("pointerup",endDrag); viewport.addEventListener("pointercancel",endDrag); viewport.addEventListener("pointerleave",(e)=>{ if(isDragging) endDrag(e); });
+viewport.addEventListener("wheel",(e)=>{ if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey){ e.preventDefault(); targetOffset += (e.deltaX||e.deltaY)*0.8; } },{passive:false});
 
-viewport.addEventListener("pointerdown", (e) => {
-  isDragging = true;
-  dragStartX = e.clientX;
-  dragStartOffset = targetOffset;
-  lastX = e.clientX;
-  lastTime = performance.now();
-  dragDeltaX = 0;
-  velocity = 0;
-  viewport.setPointerCapture(e.pointerId);
-});
-viewport.addEventListener("pointermove", (e) => {
-  if (!isDragging) return;
-  const now = performance.now();
-  const dt = Math.max(1, now - lastTime);
-  const dx = e.clientX - lastX;
-  velocity = (dx / dt) * 16.66;
-  lastX = e.clientX;
-  lastTime = now;
-  dragDeltaX = e.clientX - dragStartX;
-  targetOffset = dragStartOffset - dragDeltaX;
-});
-function endDrag(e) {
-  if (!isDragging) return;
-  isDragging = false;
-  targetOffset -= velocity * 14; // inertia
-  velocity = 0;
-  try { viewport.releasePointerCapture(e.pointerId); } catch(err){}
-}
-viewport.addEventListener("pointerup", endDrag);
-viewport.addEventListener("pointercancel", endDrag);
-viewport.addEventListener("pointerleave", (e) => { if (isDragging) endDrag(e); });
-viewport.addEventListener("wheel", (e) => {
-  if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey) {
-    e.preventDefault();
-    targetOffset += (e.deltaX || e.deltaY) * 0.8;
+let lastFrame=performance.now();
+function tick(t){
+  const dt=Math.min(0.05,(t-lastFrame)/1000||0.016); lastFrame=t;
+  if(!isDragging) targetOffset += 20*dt;
+  const ease=1-Math.pow(0.001,dt);
+  scrollOffset += (targetOffset-scrollOffset)*Math.min(1,ease*1.2);
+  if(totalSpan>0){
+    const wrap=v=>((v%totalSpan)+totalSpan)%totalSpan;
+    scrollOffset=wrap(scrollOffset);
+    let diff=targetOffset-scrollOffset;
+    if(diff>totalSpan/2) targetOffset-=totalSpan;
+    if(diff<-totalSpan/2) targetOffset+=totalSpan;
   }
-}, { passive: false });
-
-let lastFrameTime = performance.now();
-function updateCarousel(time) {
-  const dt = Math.min(0.05, (time - lastFrameTime) / 1000 || 0.016);
-  lastFrameTime = time;
-
-  const autoSpeed = isDragging ? 0 : 22; // smooth auto-scroll
-  targetOffset += autoSpeed * dt;
-
-  // smooth lerp for fluid motion
-  const ease = 1 - Math.pow(0.001, dt); // frame-rate independent smoothing
-  scrollOffset += (targetOffset - scrollOffset) * Math.min(1, ease * 1.15);
-
-  if (totalSpan > 0) {
-    const wrap = (v) => ((v % totalSpan) + totalSpan) % totalSpan;
-    scrollOffset = wrap(scrollOffset);
-    targetOffset = scrollOffset + (targetOffset - scrollOffset); // keep delta small
-    // normalize target near scrollOffset
-    let diff = targetOffset - scrollOffset;
-    if (diff > totalSpan / 2) targetOffset -= totalSpan;
-    if (diff < -totalSpan / 2) targetOffset += totalSpan;
+  const vpW=viewport.clientWidth||1200, centerX=vpW/2, vpH=viewport.clientHeight||420, vCenter=vpH/2, isMobile=window.innerWidth<=820;
+  for(let i=0;i<cardElements.length;i++){
+    const card=cardElements[i];
+    let base=i*cardWidthPitch-scrollOffset;
+    while(base<-totalSpan/2) base+=totalSpan; while(base>totalSpan/2) base-=totalSpan;
+    const push=1+0.095*Math.pow(Math.min(1,Math.abs(base)/(vpW*0.48)),1.8);
+    const xCenter=centerX+base*push;
+    const norm=Math.min(1,Math.abs(xCenter-centerX)/(vpW*0.48));
+    const depth=1-norm;
+    const width=(isMobile?150:190)+(isMobile?30:54)*Math.pow(depth,1.6);
+    const height=(isMobile?235:300)+(isMobile?65:115)*Math.pow(depth,1.9);
+    const left=xCenter-width/2, top=vCenter-height/2;
+    const scale=0.86+0.16*Math.pow(depth,1.4);
+    const opacity=0.32+0.68*Math.pow(depth,1.15);
+    const blur=(1-depth)*(isMobile?0.3:0.7);
+    card.style.width=width+"px"; card.style.height=height+"px"; card.style.opacity=opacity.toFixed(3);
+    card.style.zIndex=String(Math.round(depth*100)); card.style.filter=blur>0.05?`blur(${blur.toFixed(2)}px)`:"none";
+    card.style.transform=`translate3d(${left.toFixed(2)}px,${top.toFixed(2)}px,0) scale(${scale.toFixed(4)})`;
   }
-
-  const vpW = viewport.clientWidth || 1440;
-  const centerX = vpW / 2;
-  const vpH = viewport.clientHeight || 470;
-  const vCenter = vpH / 2 + (window.innerWidth <= 820 ? 0 : 18);
-  const isMobile = window.innerWidth <= 820;
-
-  for (let i = 0; i < cardElements.length; i++) {
-    const card = cardElements[i];
-    let base = i * cardWidthPitch - scrollOffset;
-    while (base < -totalSpan / 2) base += totalSpan;
-    while (base > totalSpan / 2) base -= totalSpan;
-
-    const t = base;
-    const absT = Math.abs(t);
-    // cylinder-like spacing: push outer cards away
-    const pushFactor = 1 + 0.095 * Math.pow(Math.min(1, absT / (vpW * 0.48)), 1.8);
-    const xCenter = centerX + t * pushFactor;
-
-    const norm = Math.min(1, Math.abs(xCenter - centerX) / (vpW * 0.48));
-    const depth = 1 - norm;
-
-    const baseW = isMobile ? 150 : 188;
-    const growW = isMobile ? 34 : 56;
-    const width = baseW + growW * Math.pow(depth, 1.6);
-    const baseH = isMobile ? 240 : 310;
-    const growH = isMobile ? 70 : 120;
-    const height = baseH + growH * Math.pow(depth, 1.9);
-
-    const left = xCenter - width / 2;
-    const top = vCenter - height / 2;
-
-    const scale = 0.86 + 0.16 * Math.pow(depth, 1.4);
-    const opacity = 0.35 + 0.65 * Math.pow(depth, 1.2);
-    const blur = (1 - depth) * (isMobile ? 0.4 : 0.8);
-    const z = Math.round(depth * 100);
-
-    card.style.width = width + "px";
-    card.style.height = height + "px";
-    card.style.opacity = opacity.toFixed(3);
-    card.style.zIndex = String(z);
-    card.style.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : "none";
-    card.style.transform = `translate3d(${left.toFixed(2)}px, ${top.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
-  }
-
-  requestAnimationFrame(updateCarousel);
+  requestAnimationFrame(tick);
 }
-requestAnimationFrame(updateCarousel);
+requestAnimationFrame(tick);
+let rz; window.addEventListener("resize",()=>{ clearTimeout(rz); rz=setTimeout(buildCarousel,120); });
 
-/* rebuild carousel on resize/data changes */
-let _resizeTimer;
-window.addEventListener("resize", () => {
-  clearTimeout(_resizeTimer);
-  _resizeTimer = setTimeout(() => { resizeFrame(); buildCarousel(); }, 120);
-});
-
-/* PIN PAD AUTH */
-let enteredPin = "";
-function openAdminLoginModal() {
-  enteredPin = "";
-  updatePinDots();
-  document.getElementById("pinErrorMsg").textContent = "";
-  document.getElementById("adminLoginModal").hidden = false;
+/* CART */
+function changeQty(id,delta){ const cur=cart[id]||0; const next=Math.max(0,cur+delta); if(next===0) delete cart[id]; else cart[id]=next; saveState(); updateCartBar(); renderMenuModalContent(); renderCartModalContent(); }
+function updateCartBar(){
+  const entries=Object.entries(cart).filter(([,q])=>q>0);
+  const qty=entries.reduce((s,[,q])=>s+q,0);
+  const total=entries.reduce((s,[id,q])=>{ const it=menuItems.find(m=>m.id===id); return s+(it?it.price*q:0); },0);
+  const bar=document.getElementById("cartBar");
+  if(qty>0){ bar.hidden=false; document.getElementById("cartBarCount").textContent=`${qty} item${qty>1?"s":""}`; document.getElementById("cartBarTotal").textContent=formatUGX(total); }
+  else bar.hidden=true;
 }
-function closeAdminLoginModal() { document.getElementById("adminLoginModal").hidden = true; }
-function pressPin(digit) {
-  if (enteredPin.length < 8) { enteredPin += digit; updatePinDots(); }
-}
-function clearPin() {
-  enteredPin = "";
-  updatePinDots();
-  document.getElementById("pinErrorMsg").textContent = "";
-}
-function updatePinDots() {
-  const dots = document.querySelectorAll(".pindot");
-  dots.forEach((dot, idx) => {
-    dot.style.background = idx < enteredPin.length ? "var(--forest)" : "transparent";
-  });
-}
-function submitPin() {
-  if (enteredPin === adminPassword) {
-    closeAdminLoginModal();
-    renderAdminDashboard();
-    document.getElementById("adminDashboardModal").hidden = false;
-    showToast("Welcome to Admin Backend");
-  } else {
-    document.getElementById("pinErrorMsg").textContent = "Incorrect PIN. Try again.";
-    enteredPin = "";
-    updatePinDots();
-  }
-}
-
-/* CART & QTY */
-function changeQty(id, delta) {
-  const current = cart[id] || 0;
-  const next = Math.max(0, current + delta);
-  if (next === 0) delete cart[id]; else cart[id] = next;
-  saveState();
-  updateCartBar();
-  renderMenuModalContent();
-  renderCartModalContent();
-}
-function updateCartBar() {
-  const entries = Object.entries(cart).filter(([id, qty]) => qty > 0);
-  const totalQty = entries.reduce((sum, [, q]) => sum + q, 0);
-  const totalPrice = entries.reduce((sum, [id, q]) => {
-    const item = menuItems.find(m => m.id === id);
-    return sum + (item ? item.price * q : 0);
-  }, 0);
-  const bar = document.getElementById("cartBar");
-  if (totalQty > 0) {
-    bar.hidden = false;
-    document.getElementById("cartBarCount").textContent = `${totalQty} item${totalQty > 1 ? "s" : ""}`;
-    document.getElementById("cartBarTotal").textContent = formatUGX(totalPrice);
-  } else {
-    bar.hidden = true;
-  }
-}
-
-/* MENU MODAL */
-function openMenuModal() {
-  renderMenuModalContent();
-  document.getElementById("menuModal").hidden = false;
-}
-function closeMenuModal() { document.getElementById("menuModal").hidden = true; }
-function renderMenuModalContent() {
-  const body = document.getElementById("menuModalBody");
-  if (!body) return;
-  body.innerHTML = categories.map(cat => {
-    const items = menuItems.filter(i => i.category === cat);
-    if (!items.length) return "";
-    return `
-      <div style="margin-bottom:24px;">
-        <h4 style="font-family:'Inter Tight',sans-serif;font-size:1.15rem;color:var(--forest);border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:12px;">${escapeHtml(cat)}</h4>
-        <div style="display:flex;flex-direction:column;gap:12px;">
-          ${items.map(item => {
-            const qty = cart[item.id] || 0;
-            return `
-              <div style="display:flex;align-items:center;gap:14px;background:rgba(247,250,255,0.04);border:1px solid var(--line);padding:10px 12px;border-radius:14px;">
-                <img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.name)}" style="width:64px;height:64px;border-radius:12px;object-fit:cover;flex:none;"/>
-                <div style="flex:1;min-width:0;">
-                  <strong style="display:block;font-size:0.98rem;color:var(--white);">${escapeHtml(item.name)}</strong>
-                  <span style="font-size:0.8rem;color:var(--muted);line-height:1.35;display:block;margin-top:2px;">${escapeHtml(item.desc)}</span>
-                  <div style="font-weight:700;color:var(--forest);font-size:0.9rem;margin-top:4px;">${formatUGX(item.price)}</div>
-                </div>
-                <div class="qty-stepper">
-                  <button type="button" class="qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
-                  <span style="font-weight:700;min-width:20px;text-align:center;color:var(--white);">${qty}</span>
-                  <button type="button" class="qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      </div>
-    `;
+function openMenuModal(){ renderMenuModalContent(); document.getElementById("menuModal").hidden=false; }
+function closeMenuModal(){ document.getElementById("menuModal").hidden=true; }
+function renderMenuModalContent(){
+  const body=document.getElementById("menuModalBody"); if(!body) return;
+  body.innerHTML = categories.map(cat=>{
+    const items=menuItems.filter(i=>i.category===cat); if(!items.length) return "";
+    return `<div style="margin-bottom:22px;"><h4 style="font-family:'Inter Tight',sans-serif;font-size:1.12rem;color:var(--forest);border-bottom:1px solid var(--line);padding-bottom:6px;margin:0 0 12px;">${escapeHtml(cat)}</h4>
+      <div style="display:flex;flex-direction:column;gap:10px;">${items.map(item=>{ const q=cart[item.id]||0; return `
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(247,250,255,0.04);border:1px solid var(--line);padding:10px;border-radius:14px;">
+          <img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.name)}" style="width:62px;height:62px;border-radius:12px;object-fit:cover;flex:none;"/>
+          <div style="flex:1;min-width:0;"><strong style="display:block;color:var(--white);font-size:.96rem;">${escapeHtml(item.name)}</strong><span style="font-size:.8rem;color:var(--muted);display:block;line-height:1.35;margin-top:2px;">${escapeHtml(item.desc||"")}</span><div style="font-weight:700;color:var(--forest);font-size:.9rem;margin-top:4px;">${formatUGX(item.price)}</div></div>
+          <div class="qty-stepper"><button type="button" class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button><span style="font-weight:700;min-width:20px;text-align:center;color:var(--white);">${q}</span><button type="button" class="qty-btn" onclick="changeQty('${item.id}',1)">+</button></div>
+        </div>`; }).join("")}</div></div>`;
   }).join("");
-
-  const totalQty = Object.values(cart).reduce((a,b)=>a+b,0);
-  if (totalQty > 0) {
-    body.innerHTML += `
-      <button type="button" class="pill-signup" style="width:100%;height:50px;margin-top:10px;" onclick="closeMenuModal(); openCartModal();">
-        Proceed to Checkout (${totalQty} items)
-      </button>
-    `;
-  }
+  const totalQty=Object.values(cart).reduce((a,b)=>a+b,0);
+  if(totalQty>0) body.innerHTML += `<button type="button" class="pill-lime" style="width:100%;height:50px;margin-top:8px;border-radius:12px;" onclick="closeMenuModal();openCartModal();">Proceed to Checkout (${totalQty} items)</button>`;
 }
-
-/* CART MODAL */
-function openCartModal() {
-  renderCartModalContent();
-  document.getElementById("cartModal").hidden = false;
-}
-function closeCartModal() { document.getElementById("cartModal").hidden = true; }
-function renderCartModalContent() {
-  const listEl = document.getElementById("cartItemsList");
-  const totalEl = document.getElementById("cartModalTotal");
-  if (!listEl || !totalEl) return;
-  const entries = Object.entries(cart).filter(([id, q]) => q > 0);
-  let total = 0;
-  if (!entries.length) {
-    listEl.innerHTML = `<p style="color:var(--muted);text-align:center;padding:20px 0;">Your cart is empty.</p>`;
-  } else {
-    listEl.innerHTML = entries.map(([id, q]) => {
-      const item = menuItems.find(m => m.id === id);
-      if (!item) return "";
-      const sub = item.price * q;
-      total += sub;
-      return `
-        <div class="cart-row">
-          <div style="flex:1;min-width:0;">
-            <strong style="color:var(--white);">${escapeHtml(item.name)}</strong><br/>
-            <small style="color:var(--muted);">${formatUGX(item.price)} each</small>
-          </div>
-          <div class="qty-stepper">
-            <button type="button" class="qty-btn" onclick="changeQty('${id}', -1)">−</button>
-            <span style="font-weight:700;min-width:20px;text-align:center;color:var(--white);">${q}</span>
-            <button type="button" class="qty-btn" onclick="changeQty('${id}', 1)">+</button>
-          </div>
-          <div style="font-weight:700;text-align:right;min-width:88px;color:var(--white);">${formatUGX(sub)}</div>
-        </div>
-      `;
-    }).join("");
+function openCartModal(){ renderCartModalContent(); document.getElementById("cartModal").hidden=false; }
+function closeCartModal(){ document.getElementById("cartModal").hidden=true; }
+function renderCartModalContent(){
+  const list=document.getElementById("cartItemsList"), totalEl=document.getElementById("cartModalTotal"); if(!list||!totalEl) return;
+  const entries=Object.entries(cart).filter(([,q])=>q>0); let total=0;
+  if(!entries.length){ list.innerHTML=`<p style="color:var(--muted);text-align:center;padding:18px 0;">Your cart is empty.</p>`; }
+  else {
+    list.innerHTML = entries.map(([id,q])=>{ const it=menuItems.find(m=>m.id===id); if(!it) return ""; const sub=it.price*q; total+=sub; return `
+      <div class="cart-row"><div style="flex:1;min-width:0;"><strong style="color:var(--white);">${escapeHtml(it.name)}</strong><br/><small style="color:var(--muted);">${formatUGX(it.price)} each</small></div>
+      <div class="qty-stepper"><button type="button" class="qty-btn" onclick="changeQty('${id}',-1)">−</button><span style="font-weight:700;min-width:20px;text-align:center;color:var(--white);">${q}</span><button type="button" class="qty-btn" onclick="changeQty('${id}',1)">+</button></div>
+      <div style="font-weight:700;min-width:86px;text-align:right;color:var(--white);">${formatUGX(sub)}</div></div>`; }).join("");
   }
   totalEl.textContent = formatUGX(total);
 }
-
-function sendWhatsAppOrder() {
-  const entries = Object.entries(cart).filter(([id, q]) => q > 0);
-  if (!entries.length) return showToast("Cart is empty!");
-  const orderType = document.getElementById("orderType").value;
-  const name = document.getElementById("custName").value.trim() || "Guest";
-  const address = document.getElementById("custAddress").value.trim() || "Kampala";
-
-  let total = 0;
-  const lines = entries.map(([id, q]) => {
-    const item = menuItems.find(m => m.id === id);
-    if (!item) return null;
-    const sub = item.price * q;
-    total += sub;
-    return `• ${q}x ${item.name} — ${formatUGX(sub)}`;
-  }).filter(Boolean);
-
-  const msg =
-`Hello Moin's Cafe! I'd like to place an order:
-*Order Type:* ${orderType}
-*Name:* ${name}
-*Location/Note:* ${address}
-
-*Items:*
-${lines.join("\n")}
-
-*Total:* ${formatUGX(total)}`;
-
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+function sendWhatsAppOrder(){
+  const entries=Object.entries(cart).filter(([,q])=>q>0); if(!entries.length) return showToast("Cart is empty!");
+  const orderType=document.getElementById("orderType").value;
+  const name=document.getElementById("custName").value.trim()||"Guest";
+  const address=document.getElementById("custAddress").value.trim()||"Kampala";
+  let total=0; const lines=entries.map(([id,q])=>{ const it=menuItems.find(m=>m.id===id); if(!it) return null; const sub=it.price*q; total+=sub; return `• ${q}x ${it.name} — ${formatUGX(sub)}`; }).filter(Boolean);
+  const msg=`Hello ${siteSettings.cafeName || "Moin's Cafe"}! I'd like to place an order:\n*Order Type:* ${orderType}\n*Name:* ${name}\n*Location/Note:* ${address}\n\n*Items:*\n${lines.join("\n")}\n\n*Total:* ${formatUGX(total)}`;
+  const num=(siteSettings.whatsapp||DEFAULT_SITE.whatsapp).replace(/\D/g,"");
+  window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`,"_blank");
 }
 
-/* ADMIN DASHBOARD */
-function closeAdminDashboardModal() { document.getElementById("adminDashboardModal").hidden = true; }
-function switchAdminTab(evt, sec) {
-  document.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active"));
-  document.querySelectorAll(".admin-section").forEach(s => s.classList.remove("active"));
-  if (evt && evt.target) evt.target.classList.add("active");
+/* ADMIN AUTH */
+let enteredPin="";
+function openAdminLoginModal(){ enteredPin=""; updatePinDots(); document.getElementById("pinErrorMsg").textContent=""; document.getElementById("adminLoginModal").hidden=false; }
+function closeAdminLoginModal(){ document.getElementById("adminLoginModal").hidden=true; }
+function pressPin(d){ if(enteredPin.length<8){ enteredPin+=d; updatePinDots(); } }
+function clearPin(){ enteredPin=""; updatePinDots(); document.getElementById("pinErrorMsg").textContent=""; }
+function updatePinDots(){ document.querySelectorAll(".pindot").forEach((dot,i)=>{ dot.style.background = i<enteredPin.length ? "var(--forest)" : "transparent"; }); }
+function submitPin(){
+  if(enteredPin===adminPassword){ closeAdminLoginModal(); renderAdminDashboard(); document.getElementById("adminDashboardModal").hidden=false; showToast("Admin access granted"); }
+  else { document.getElementById("pinErrorMsg").textContent="Incorrect PIN. Try again."; enteredPin=""; updatePinDots(); }
+}
+function closeAdminDashboardModal(){ document.getElementById("adminDashboardModal").hidden=true; }
+function switchAdminTab(evt,sec){
+  document.querySelectorAll(".admin-tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".admin-section").forEach(s=>s.classList.remove("active"));
+  if(evt&&evt.target) evt.target.classList.add("active");
   document.getElementById(`admin-sec-${sec}`).classList.add("active");
-  if (sec === "prices") renderAdminPrices();
-  if (sec === "categories") renderAdminCategories();
+  if(sec==="prices") renderAdminPrices();
+  if(sec==="categories") renderAdminCategories();
+  if(sec==="site") loadSiteSettingsForm();
 }
-function renderAdminDashboard() {
-  renderAdminPrices();
-  renderAdminCategories();
-  const sel = document.getElementById("newItCat");
-  if (sel) sel.innerHTML = categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
-}
-function renderAdminPrices() {
-  const tbody = document.getElementById("adminPriceTableBody");
-  if (!tbody) return;
-  tbody.innerHTML = menuItems.map(item => `
+function renderAdminDashboard(){ renderAdminPrices(); renderAdminCategories(); loadSiteSettingsForm(); const sel=document.getElementById("newItCat"); if(sel) sel.innerHTML=categories.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join(""); }
+function renderAdminPrices(){
+  const tbody=document.getElementById("adminPriceTableBody"); if(!tbody) return;
+  tbody.innerHTML = menuItems.map(item=>`
     <tr>
-      <td><img src="${escapeHtml(item.img)}" alt="" style="width:42px;height:42px;border-radius:8px;object-fit:cover;"/></td>
-      <td><strong style="color:var(--white);">${escapeHtml(item.name)}</strong><br/><small style="color:var(--muted);">${escapeHtml(item.category)}</small></td>
-      <td>
-        <select onchange="updateItemCat('${item.id}', this.value)" class="admin-input" style="width:auto;max-width:180px;">
-          ${categories.map(c => `<option value="${escapeHtml(c)}" ${c===item.category?"selected":""}>${escapeHtml(c)}</option>`).join("")}
-        </select>
-      </td>
-      <td><input type="number" class="admin-input" id="adm_price_${item.id}" value="${item.price}" step="500"/></td>
-      <td>
-        <button type="button" class="pill-signup" style="height:32px;padding:0 12px;font-size:0.76rem;background:#ff4d6d;color:#fff;box-shadow:none;" onclick="deleteMenuItem('${item.id}')">Delete</button>
-      </td>
-    </tr>
-  `).join("");
+      <td><img src="${escapeHtml(item.img)}" alt="" style="width:44px;height:44px;border-radius:8px;object-fit:cover;"/></td>
+      <td><input class="admin-input" id="adm_name_${item.id}" value="${escapeHtml(item.name)}" style="margin-bottom:6px;"/><input class="admin-input" id="adm_desc_${item.id}" value="${escapeHtml(item.desc||"")}" placeholder="Description"/></td>
+      <td><select onchange="updateItemCat('${item.id}',this.value)" class="admin-input" style="min-width:150px;">${categories.map(c=>`<option value="${escapeHtml(c)}" ${c===item.category?"selected":""}>${escapeHtml(c)}</option>`).join("")}</select></td>
+      <td><input type="number" class="admin-input" id="adm_price_${item.id}" value="${item.price}" step="500" style="width:120px;"/></td>
+      <td><button type="button" class="pill-lime" style="height:32px;padding:0 12px;font-size:.75rem;background:#ff4d6d;color:#fff;box-shadow:none;border-radius:8px;" onclick="deleteMenuItem('${item.id}')">Delete</button></td>
+    </tr>`).join("");
 }
-function updateItemCat(id, newCat) {
-  const item = menuItems.find(m => m.id === id);
-  if (item) { item.category = newCat; saveState(); buildCarousel(); showToast("Category updated"); }
-}
-function saveAllAdminPrices() {
-  menuItems.forEach(item => {
-    const inp = document.getElementById(`adm_price_${item.id}`);
-    if (inp) {
-      const val = Number(inp.value);
-      if (!isNaN(val) && val >= 0) item.price = val;
-    }
+function updateItemCat(id,newCat){ const it=menuItems.find(m=>m.id===id); if(it){ it.category=newCat; saveState(); buildCarousel(); renderMenuModalContent(); } }
+function saveAllAdminPrices(){
+  menuItems.forEach(item=>{
+    const pn=document.getElementById(`adm_price_${item.id}`), nm=document.getElementById(`adm_name_${item.id}`), ds=document.getElementById(`adm_desc_${item.id}`);
+    if(pn){ const v=Number(pn.value); if(!isNaN(v)&&v>=0) item.price=v; }
+    if(nm && nm.value.trim()) item.name=nm.value.trim();
+    if(ds) item.desc=ds.value.trim();
   });
-  saveState();
-  buildCarousel();
-  showToast("All prices saved successfully!");
+  saveState(); buildCarousel(); renderMenuModalContent(); showToast("Menu saved");
 }
-async function addNewMenuItem() {
-  const name = document.getElementById("newItName").value.trim();
-  const category = document.getElementById("newItCat").value;
-  const price = Number(document.getElementById("newItPrice").value);
-  const desc = document.getElementById("newItDesc").value.trim() || "Freshly prepared at Moin's Cafe.";
-  const fileInput = document.getElementById("newItFile");
-  if (!name || !price) return showToast("Enter item name and price.");
-
-  let img = "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=85";
-  if (fileInput.files && fileInput.files[0]) {
-    img = await new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = e => resolve(e.target.result);
-      reader.readAsDataURL(fileInput.files[0]);
-    });
-  }
-
-  menuItems.unshift({ id: "it_" + Date.now(), name, category, price, desc, img });
-  document.getElementById("newItName").value = "";
-  document.getElementById("newItPrice").value = "";
-  document.getElementById("newItDesc").value = "";
-  fileInput.value = "";
-  saveState();
-  renderAdminPrices();
-  buildCarousel();
-  showToast("Added item successfully!");
+async function addNewMenuItem(){
+  const name=document.getElementById("newItName").value.trim(), category=document.getElementById("newItCat").value;
+  const price=Number(document.getElementById("newItPrice").value), desc=document.getElementById("newItDesc").value.trim()||"Freshly prepared.";
+  const fileInput=document.getElementById("newItFile");
+  if(!name||!price) return showToast("Enter item name and price.");
+  let img="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=85";
+  if(fileInput.files&&fileInput.files[0]) img=await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(fileInput.files[0]); });
+  menuItems.unshift({id:"it_"+Date.now(),name,category,price,desc,img});
+  document.getElementById("newItName").value=""; document.getElementById("newItPrice").value=""; document.getElementById("newItDesc").value=""; fileInput.value="";
+  saveState(); renderAdminPrices(); buildCarousel(); renderMenuModalContent(); showToast("Item added");
 }
-function deleteMenuItem(id) {
-  menuItems = menuItems.filter(m => m.id !== id);
-  delete cart[id];
-  saveState();
-  renderAdminPrices();
-  updateCartBar();
-  buildCarousel();
-  showToast("Item deleted.");
+function deleteMenuItem(id){ menuItems=menuItems.filter(m=>m.id!==id); delete cart[id]; saveState(); renderAdminPrices(); buildCarousel(); updateCartBar(); renderMenuModalContent(); showToast("Item deleted"); }
+function renderAdminCategories(){
+  const list=document.getElementById("adminCategoryList"); if(!list) return;
+  list.innerHTML = categories.map((cat,idx)=>`<div style="display:flex;align-items:center;justify-content:space-between;background:rgba(247,250,255,0.04);border:1px solid var(--line);padding:10px 14px;border-radius:10px;gap:10px;"><span style="font-weight:600;color:var(--white);">${escapeHtml(cat)}</span><button type="button" class="pill-lime" style="height:32px;padding:0 12px;font-size:.75rem;background:#ff4d6d;color:#fff;box-shadow:none;border-radius:8px;" onclick="deleteCategory(${idx})">Delete</button></div>`).join("");
 }
-function renderAdminCategories() {
-  const list = document.getElementById("adminCategoryList");
-  if (!list) return;
-  list.innerHTML = categories.map((cat, idx) => `
-    <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(247,250,255,0.04);border:1px solid var(--line);padding:10px 14px;border-radius:10px;gap:10px;">
-      <span style="font-weight:600;color:var(--white);">${escapeHtml(cat)}</span>
-      <button type="button" class="pill-signup" style="height:32px;padding:0 12px;font-size:0.75rem;background:#ff4d6d;color:#fff;box-shadow:none;" onclick="deleteCategory(${idx})">Delete</button>
-    </div>
-  `).join("");
+function addNewCategory(){ const name=document.getElementById("newCategoryName").value.trim(); if(!name) return showToast("Enter category name."); if(categories.includes(name)) return showToast("Category exists."); categories.push(name); document.getElementById("newCategoryName").value=""; saveState(); renderAdminCategories(); renderAdminDashboard(); buildCarousel(); renderMenuModalContent(); showToast("Category added"); }
+function deleteCategory(idx){ if(categories.length<=1) return showToast("Keep at least one category."); const cat=categories[idx]; categories.splice(idx,1); menuItems.forEach(m=>{ if(m.category===cat) m.category=categories[0]; }); saveState(); renderAdminCategories(); renderAdminDashboard(); buildCarousel(); renderMenuModalContent(); showToast("Category removed"); }
+function loadSiteSettingsForm(){
+  const s=siteSettings;
+  const set=(id,val)=>{ const el=document.getElementById(id); if(el) el.value=val||""; };
+  set("siteCafeName", s.cafeName); set("siteWhatsapp", s.whatsapp); set("siteBadgeText", s.badge);
+  set("siteHeadline1", s.headline1); set("siteHeadline2", s.headline2); set("siteSublineText", s.subline);
 }
-function addNewCategory() {
-  const name = document.getElementById("newCategoryName").value.trim();
-  if (!name) return showToast("Enter category name.");
-  if (categories.includes(name)) return showToast("Category already exists.");
-  categories.push(name);
-  document.getElementById("newCategoryName").value = "";
-  saveState();
-  renderAdminCategories();
-  renderAdminDashboard();
-  buildCarousel();
-  showToast("Category added!");
+function saveSiteSettings(){
+  siteSettings.cafeName = document.getElementById("siteCafeName").value.trim() || DEFAULT_SITE.cafeName;
+  siteSettings.whatsapp = (document.getElementById("siteWhatsapp").value||"").replace(/\D/g,"") || DEFAULT_SITE.whatsapp;
+  siteSettings.badge = document.getElementById("siteBadgeText").value.trim() || DEFAULT_SITE.badge;
+  siteSettings.headline1 = document.getElementById("siteHeadline1").value.trim() || DEFAULT_SITE.headline1;
+  siteSettings.headline2 = document.getElementById("siteHeadline2").value.trim() || DEFAULT_SITE.headline2;
+  siteSettings.subline = document.getElementById("siteSublineText").value.trim() || DEFAULT_SITE.subline;
+  saveState(); applySiteSettings(); showToast("Site settings saved");
 }
-function deleteCategory(idx) {
-  const cat = categories[idx];
-  if (categories.length <= 1) return showToast("Keep at least one category.");
-  categories.splice(idx, 1);
-  menuItems.forEach(m => { if (m.category === cat) m.category = categories[0]; });
-  saveState();
-  renderAdminCategories();
-  renderAdminDashboard();
-  buildCarousel();
-  showToast("Category removed.");
-}
-function updateAdminPassword() {
-  const p1 = document.getElementById("newPass1").value;
-  const p2 = document.getElementById("newPass2").value;
-  if (!p1 || p1.length < 4) return showToast("Password must be at least 4 chars.");
-  if (p1 !== p2) return showToast("Passwords do not match.");
-  adminPassword = p1;
-  localStorage.setItem(STORAGE_KEYS.PASS, adminPassword);
-  document.getElementById("newPass1").value = "";
-  document.getElementById("newPass2").value = "";
-  showToast("Admin password updated!");
+function updateAdminPassword(){
+  const p1=document.getElementById("newPass1").value, p2=document.getElementById("newPass2").value;
+  if(!p1||p1.length<4) return showToast("Password must be at least 4 chars.");
+  if(p1!==p2) return showToast("Passwords do not match.");
+  adminPassword=p1; localStorage.setItem(STORAGE_KEYS.PASS,adminPassword);
+  document.getElementById("newPass1").value=""; document.getElementById("newPass2").value="";
+  showToast("Admin password updated");
 }
 
 /* INIT */
+applySiteSettings();
 buildCarousel();
 updateCartBar();
 </script>
