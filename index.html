@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="theme-color" content="#0B1026"/>
 <meta name="description" content="Moin's Cafe — freshly prepared meals, gourmet burgers, loaded fries, grilled chicken, fresh juices and great vibes in Kampala, Uganda."/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Moin's Cafe"/>
+<meta name="application-name" content="Moin's Cafe"/>
+<link id="appManifestLink" rel="manifest" href=""/>
+<link id="appleTouchIconLink" rel="apple-touch-icon" href=""/>
 <title>Moin's Cafe | Kampala Studio Edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -149,6 +156,7 @@ select option { background: #121A33; color: #F7FAFF; }
       <a href="#menu" onclick="openMenuModal(); return false;">Coffee &amp; Shakes</a>
     </nav>
     <div class="top-actions">
+      <button type="button" id="installAppBtn" class="pill pill-lime" onclick="handleInstallAppClick()" style="display:none;">⬇️ Install App</button>
       <button type="button" class="pill pill-ghost" onclick="openAdminLoginModal()">Admin</button>
       <button type="button" class="pill pill-lime" onclick="openMenuModal()">Menu</button>
     </div>
@@ -206,6 +214,26 @@ select option { background: #121A33; color: #F7FAFF; }
     <input type="password" id="adminPasswordInput" class="admin-input" placeholder="Enter admin password" autocomplete="current-password" style="max-width:320px;margin:0 auto 14px;text-align:center;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitAdminPassword();}"/>
     <button type="button" class="pill-lime" style="height:44px;min-width:160px;border-radius:12px;font-weight:800;" onclick="submitAdminPassword()">Unlock Admin</button>
     <p id="adminLoginError" style="color:var(--magenta);font-size:.82rem;font-weight:600;margin-top:12px;min-height:18px;"></p>
+  </div>
+</div>
+
+<div id="iosInstallModal" class="modal-backdrop" hidden>
+  <div class="modal-card" style="max-width:520px;">
+    <div class="modal-head">
+      <h3>Install App on iPhone/iPad</h3>
+      <button type="button" class="close-x" onclick="closeIosInstallModal()">✕</button>
+    </div>
+    <p style="margin:0 0 12px;color:var(--muted);line-height:1.5;">Install Moin's Cafe on your iPhone or iPad in a few taps (no App Store needed):</p>
+    <ol style="margin:0 0 14px;padding-left:20px;color:var(--ink);line-height:1.6;">
+      <li>Open this site in <strong>Safari</strong>.</li>
+      <li>Tap the <strong>Share</strong> icon (square with an arrow up).</li>
+      <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+      <li>Tap <strong>Add</strong>. The app will appear on your home screen.</li>
+    </ol>
+    <div style="background:rgba(247,250,255,0.04);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--muted);font-size:.9rem;line-height:1.5;">
+      Tip: After installing, open it from your home screen. All admin features, menu updates, and ordering tools will work in the app.
+    </div>
+    <button type="button" class="pill-lime" style="width:100%;height:46px;margin-top:16px;border-radius:12px;" onclick="closeIosInstallModal()">Got it</button>
   </div>
 </div>
 
@@ -986,6 +1014,128 @@ function updateAdminPassword(){
   showToast("Admin password updated");
 }
 
+/* PWA (installable app without Play Store / App Store) */
+let deferredInstallPrompt = null;
+
+function isAppInstalled(){
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+function isIosDevice(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent || "");
+}
+function isSafariOnIos(){
+  const ua = navigator.userAgent || "";
+  const isIos = /iphone|ipad|ipod/i.test(ua);
+  const isWebkit = /webkit/i.test(ua);
+  const isOtherIosBrowser = /crios|fxios|edgios|opios|mercury/i.test(ua);
+  return isIos && isWebkit && !isOtherIosBrowser;
+}
+function updateInstallButtonVisibility(){
+  const btn = document.getElementById("installAppBtn");
+  if(!btn) return;
+  if(isAppInstalled()){
+    btn.style.display = "none";
+    return;
+  }
+  // Show on Android/desktop when browser install prompt is available, or on iOS with instructions.
+  if(deferredInstallPrompt || isIosDevice()){
+    btn.style.display = "inline-flex";
+    btn.textContent = isIosDevice() && !deferredInstallPrompt ? "⬇️ Install App (iPhone/iPad)" : "⬇️ Install App";
+  } else {
+    btn.style.display = "none";
+  }
+}
+function openIosInstallModal(){ const m = document.getElementById("iosInstallModal"); if(m) m.hidden = false; }
+function closeIosInstallModal(){ const m = document.getElementById("iosInstallModal"); if(m) m.hidden = true; }
+async function handleInstallAppClick(){
+  if(deferredInstallPrompt){
+    try {
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      if(choice && choice.outcome === "accepted"){
+        showToast("App install started");
+      } else {
+        showToast("Install dismissed");
+      }
+    } catch(e){
+      console.warn("Install prompt failed", e);
+      showToast("Could not open install prompt");
+    } finally {
+      deferredInstallPrompt = null;
+      updateInstallButtonVisibility();
+    }
+    return;
+  }
+  if(isIosDevice()){
+    openIosInstallModal();
+    if(!isSafariOnIos()){
+      showToast("For best results, open this page in Safari, then Add to Home Screen.");
+    }
+    return;
+  }
+  showToast("Install option not available yet. Use your browser menu: Install App / Add to Home Screen.");
+}
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  updateInstallButtonVisibility();
+});
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  updateInstallButtonVisibility();
+  showToast("App installed successfully");
+});
+
+function setupPWA(){
+  const name = (siteSettings && siteSettings.cafeName) || "Moin's Cafe";
+  const shortName = name.length > 12 ? "Moin's Cafe" : name;
+  const theme = "#0B1026";
+  const bg = "#0B1026";
+  const svgIcon = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='108' fill='${bg}'/><rect x='72' y='72' width='368' height='368' rx='92' fill='#121A33' stroke='#CCFF00' stroke-width='18'/><text x='256' y='285' text-anchor='middle' font-size='210' font-family='Arial, sans-serif'>☕</text><text x='256' y='390' text-anchor='middle' font-size='64' font-weight='700' fill='#CCFF00' font-family='Arial, sans-serif'>MOIN'S</text></svg>`;
+  const iconDataUrl = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svgIcon);
+
+  const manifest = {
+    name,
+    short_name: shortName,
+    description: "Moin's Cafe menu, ordering, and admin in one installable web app.",
+    start_url: "./",
+    scope: "./",
+    display: "standalone",
+    orientation: "portrait",
+    background_color: bg,
+    theme_color: theme,
+    icons: [
+      { src: iconDataUrl, sizes: "192x192", type: "image/svg+xml", purpose: "any" },
+      { src: iconDataUrl, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+    ]
+  };
+  try {
+    const blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+    const manifestUrl = URL.createObjectURL(blob);
+    const link = document.getElementById("appManifestLink");
+    if(link) link.href = manifestUrl;
+  } catch(e) { console.warn("Manifest setup failed", e); }
+
+  const appleIcon = document.getElementById("appleTouchIconLink");
+  if(appleIcon) appleIcon.href = iconDataUrl;
+  const appleTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+  if(appleTitle) appleTitle.setAttribute("content", shortName);
+
+  if("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1")){
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").then(() => {
+        console.log("PWA service worker registered");
+      }).catch((err)=>{
+        console.warn("Service worker registration failed (add sw.js next to this HTML for full install/offline support):", err);
+      });
+    });
+  }
+
+  updateInstallButtonVisibility();
+  window.matchMedia("(display-mode: standalone)").addEventListener?.("change", updateInstallButtonVisibility);
+}
+
 /* INIT */
 document.getElementById("siteLogoFile")?.addEventListener("change", (e)=>{ const f=e.target.files&&e.target.files[0]; if(f) handleLogoUpload(f); });
 document.getElementById("sitePhotosUpload")?.addEventListener("change", (e)=>{ if(e.target.files && e.target.files.length) handleSitePhotosUpload(e.target.files); });
@@ -1010,6 +1160,7 @@ document.getElementById("sitePhotosUpload")?.addEventListener("change", (e)=>{ i
   }
 
   refreshAllViews();
+  setupPWA();
 })();
 </script>
 </body>
