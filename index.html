@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter+Tight:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <style>
 :root {
   --bg: #0B1026;
@@ -38,21 +40,8 @@ body {
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; border: 0; background: none; }
-.app {
-  height: 100vh;
-  height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 20px 4px;
-  flex: 0 0 auto;
-}
+.app { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 20px 4px; flex: 0 0 auto; }
 .brand { display: flex; align-items: center; gap: 10px; font-family: 'Inter Tight', sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--ink); }
 .logo-icon { width: 32px; height: 32px; border-radius: 10px; background: var(--forest); color: #0B1026; display: grid; place-items: center; box-shadow: 0 0 0 4px rgba(204,255,0,0.12); overflow: hidden; font-size: 1rem; }
 .logo-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -62,25 +51,12 @@ button { cursor: pointer; border: 0; background: none; }
 .pill { height: 38px; padding: 0 14px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
 .pill-ghost { background: rgba(247,250,255,0.06); border: 1px solid var(--line); color: var(--ink); }
 .pill-lime { background: var(--forest); color: #0B1026; box-shadow: 0 8px 24px rgba(204,255,0,0.22); }
-
 .hero { text-align: center; padding: 0 16px; flex: 0 0 auto; }
 .mint-badge { display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; min-height: 32px; border-radius: 99px; background: rgba(204,255,0,0.12); border: 1px solid rgba(204,255,0,0.35); color: var(--forest); font-weight: 600; font-size: 13px; }
 .headline { margin: 8px 0 0; font-family: 'Inter Tight', sans-serif; font-weight: 700; font-size: clamp(30px, 4.2vw, 58px); line-height: 1.05; letter-spacing: -0.035em; color: var(--ink); }
 .headline .accent { color: var(--forest); }
-
 .carousel-stage { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 4px 0 0; }
-.carousel-viewport {
-  width: 100%;
-  height: 100%;
-  min-height: 220px;
-  cursor: grab;
-  user-select: none;
-  touch-action: pan-y;
-  position: relative;
-  overflow: visible;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
-}
+.carousel-viewport { width: 100%; height: 100%; min-height: 220px; cursor: grab; user-select: none; touch-action: pan-y; position: relative; overflow: visible; -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%); mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%); }
 .carousel-viewport:active { cursor: grabbing; }
 .carousel-hint { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--muted); background: rgba(11,16,38,0.55); border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px; pointer-events: none; z-index: 20; white-space: nowrap; }
 .card-item { position: absolute; top: 0; transform: translate3d(0,0,0); will-change: transform, width, height, opacity, filter; border-radius: 18px; overflow: hidden; background: var(--surface-soft); border: 1.5px solid rgba(204,255,0,0.22); cursor: pointer; box-shadow: 0 18px 40px rgba(2,6,23,.45); }
@@ -92,13 +68,11 @@ button { cursor: pointer; border: 0; background: none; }
 .card-name { color: var(--ink); font-weight: 700; font-size: 14px; line-height: 1.2; text-shadow: 0 2px 8px rgba(0,0,0,.35); }
 .card-price { color: var(--forest); font-weight: 700; font-size: 12px; }
 .add-badge { position: absolute; right: 10px; top: 10px; width: 32px; height: 32px; border-radius: 50%; background: var(--forest); display: grid; place-items: center; color: #0B1026; font-size: 1.05rem; font-weight: 800; z-index: 3; }
-
 .bottom-bar { flex: 0 0 auto; padding: 4px 16px 10px; text-align: center; }
 .subline { font-size: 14px; line-height: 1.35; color: var(--muted); margin: 0 auto 8px; max-width: 760px; }
 .cta-wrap { margin: 0 auto; display: flex; align-items: center; justify-content: center; }
 .pill-cta { min-width: 220px; max-width: calc(100vw - 32px); height: 48px; padding: 0 18px; border-radius: 99px; background: var(--forest); color: #0B1026; font-weight: 800; font-size: 14px; letter-spacing: .01em; box-shadow: 0 10px 26px rgba(204,255,0,.22); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-.cart-bar { display: none !important; } /* replaced by bottom CTA */
+.cart-bar { display: none !important; }
 .modal-backdrop { position: fixed; inset: 0; z-index: 100; background: rgba(4,8,22,.78); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; padding: 12px; }
 .modal-backdrop[hidden] { display: none; }
 .modal-card { background: linear-gradient(180deg, #121A33 0%, #0F1730 100%); border: 1px solid var(--line); border-radius: 22px; width: min(720px, 100%); max-height: 94vh; overflow-y: auto; padding: 22px; box-shadow: var(--shadow); color: var(--ink); }
@@ -125,7 +99,10 @@ select option { background: #121A33; color: #F7FAFF; }
 .admin-table td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
 .toast { position: fixed; top: 12px; right: 12px; z-index: 150; background: var(--forest); color: #0B1026; padding: 12px 16px; border-radius: 12px; font-weight: 700; box-shadow: 0 12px 30px rgba(204,255,0,0.25); display: none; max-width: min(360px, calc(100vw - 24px)); }
 .toast.show { display: block; }
-
+.sync-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-size:.75rem; font-weight:700; border:1px solid var(--line); background:rgba(247,250,255,0.05); color:var(--muted); }
+.sync-badge.ok { color: var(--forest); border-color: rgba(204,255,0,0.35); background: rgba(204,255,0,0.08); }
+.sync-badge.warn { color: #ffd166; border-color: rgba(255,209,102,0.35); background: rgba(255,209,102,0.08); }
+.sync-badge.err { color: var(--magenta); border-color: rgba(255,77,141,0.35); background: rgba(255,77,141,0.08); }
 @media (max-width: 900px) { .nav-links { display: none; } }
 @media (max-width: 700px) {
   body { overflow: auto; }
@@ -242,6 +219,7 @@ select option { background: #121A33; color: #F7FAFF; }
       <button type="button" class="admin-tab active" onclick="switchAdminTab(event,'prices')">💰 Menu & Prices</button>
       <button type="button" class="admin-tab" onclick="switchAdminTab(event,'categories')">📁 Categories</button>
       <button type="button" class="admin-tab" onclick="switchAdminTab(event,'site')">🖥️ Site Settings</button>
+      <button type="button" class="admin-tab" onclick="switchAdminTab(event,'publish')">☁️ Instant Sync</button>
       <button type="button" class="admin-tab" onclick="switchAdminTab(event,'security')">🔐 Password</button>
     </div>
 
@@ -304,7 +282,53 @@ select option { background: #121A33; color: #F7FAFF; }
         </div>
       </div>
       <button type="button" class="pill-lime" style="height:42px;padding:0 18px;margin-top:14px;border-radius:10px;" onclick="saveSiteSettings()">Save Site Settings</button>
-      <p style="color:var(--muted);font-size:.82rem;margin-top:10px;">Changes are saved on this device/browser and apply to desktop and mobile views.</p>
+      <p style="color:var(--muted);font-size:.82rem;margin-top:10px;">If Instant Cloud Sync is enabled, changes are published instantly to all devices. Otherwise, use the Instant Sync tab for publish options.</p>
+    </div>
+
+    <div id="admin-sec-publish" class="admin-section">
+      <h4 style="margin-top:0;color:var(--forest);">Instant Sync (All Devices)</h4>
+      <div id="publishStatusBox" style="background:rgba(247,250,255,0.04);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;color:var(--muted);font-size:.92rem;line-height:1.45;"></div>
+
+      <div style="background:rgba(247,250,255,0.04);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;">
+        <p style="margin:0 0 8px;color:var(--ink);font-weight:700;">Recommended: Firebase Realtime Database (instant updates)</p>
+        <p style="margin:0 0 10px;color:var(--muted);font-size:.86rem;line-height:1.5;">Connect once, then any menu/photo/price change made from any gadget updates for everyone in real time. For this to work on all visitors' devices, the same Firebase config must be embedded in the <code>moins-cafe.html</code> file you upload to your hosting.</p>
+        <div class="field-group" style="margin-top:8px;">
+          <label>Firebase Web App Config (JSON)</label>
+          <textarea id="firebaseConfigInput" class="admin-input" rows="7" placeholder='{"apiKey":"...","authDomain":"...","databaseURL":"https://YOUR-PROJECT-default-rtdb.firebaseio.com","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}'></textarea>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+          <button type="button" class="pill-lime" style="height:42px;padding:0 16px;border-radius:10px;" onclick="connectCloudSyncFromForm()">Connect & Enable Instant Sync</button>
+          <button type="button" class="pill-ghost" style="height:42px;padding:0 16px;border-radius:10px;" onclick="disconnectCloudSync()">Disconnect on This Device</button>
+          <button type="button" class="pill-ghost" style="height:42px;padding:0 16px;border-radius:10px;" onclick="copyEmbeddedConfigSnippet()">Copy Embed Code for HTML</button>
+          <button type="button" class="pill-ghost" style="height:42px;padding:0 16px;border-radius:10px;" onclick="pushCurrentDataToCloud()">Push Current Menu to Cloud</button>
+        </div>
+        <div style="margin-top:12px;color:var(--muted);font-size:.82rem;line-height:1.5;">
+          <strong>Quick setup:</strong>
+          <ol style="margin:6px 0 0;padding-left:18px;">
+            <li>Create a Firebase project and add a Web App.</li>
+            <li>Create a <strong>Realtime Database</strong> and set rules to allow read/write (or secure as needed), e.g. <code>{"rules":{".read":true,".write":true}}</code> for quick testing.</li>
+            <li>Copy the Firebase config JSON and paste it above, then click <strong>Connect & Enable Instant Sync</strong>.</li>
+            <li>Click <strong>Copy Embed Code for HTML</strong>, open <code>moins-cafe.html</code>, replace <code>const EMBEDDED_FIREBASE_CONFIG = null;</code> with the copied line, save and upload that updated HTML to your hosting.</li>
+            <li>After that, everyone loads the same configured file and all changes sync instantly across gadgets.</li>
+          </ol>
+          <p style="margin:8px 0 0;">Note: uploaded device photos are stored as base64 data in the database and can become large/slow. Prefer image URLs when possible.</p>
+        </div>
+      </div>
+
+      <div style="background:rgba(247,250,255,0.04);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;">
+        <p style="margin:0 0 8px;color:var(--ink);font-weight:700;">Backup / Manual publish (if not using Firebase)</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:10px;">
+          <button type="button" class="pill-ghost" style="height:42px;border-radius:10px;" onclick="downloadPublishData()">⬇️ Download Shared Data JSON</button>
+          <button type="button" class="pill-ghost" style="height:42px;border-radius:10px;" onclick="copyPublishData()">📋 Copy Shared Data JSON</button>
+          <button type="button" class="pill-ghost" style="height:42px;border-radius:10px;" onclick="reloadSharedData()">🔄 Reload Shared JSON File</button>
+        </div>
+        <p style="margin:0;color:var(--muted);font-size:.84rem;line-height:1.5;">Without Firebase, you must upload <code>moins-cafe-data.json</code> next to <code>moins-cafe.html</code> after each change for other devices to see updates.</p>
+        <div class="field-group" style="margin-top:10px;">
+          <label>Import shared data JSON</label>
+          <textarea id="importDataText" class="admin-input" rows="5" placeholder='Paste JSON here...'></textarea>
+        </div>
+        <button type="button" class="pill-ghost" style="height:40px;padding:0 16px;margin-top:10px;border-radius:10px;" onclick="importPublishDataFromText()">Import JSON into Editor</button>
+      </div>
     </div>
 
     <div id="admin-sec-security" class="admin-section">
@@ -314,18 +338,26 @@ select option { background: #121A33; color: #F7FAFF; }
         <div class="field-group"><label>Confirm</label><input type="password" id="newPass2" class="admin-input" placeholder="Confirm"/></div>
         <button type="button" class="pill-lime" style="height:42px;margin-top:14px;border-radius:10px;" onclick="updateAdminPassword()">Update Password</button>
       </div>
+      <p style="color:var(--muted);font-size:.82rem;margin-top:10px;">Password is stored on this device. For cloud-synced admin access across devices, a server-side auth system is required.</p>
     </div>
   </div>
 </div>
 
 <script>
+// ====== INSTANT SYNC CONFIG (replace null with your Firebase config object to enable for all devices) ======
+const EMBEDDED_FIREBASE_CONFIG = null; // Example: { apiKey:"...", authDomain:"...", databaseURL:"https://YOUR-PROJECT-default-rtdb.firebaseio.com", projectId:"...", storageBucket:"...", messagingSenderId:"...", appId:"..." }
+const CLOUD_DB_PATH = "moinsCafeSiteData";
+
 const STORAGE_KEYS = {
   MENU: "moinscafe_menu_v8",
   CATS: "moinscafe_cats_v8",
   PASS: "moinscafe_pass_v8",
   CART: "moinscafe_cart_v8",
-  SITE: "moinscafe_site_v8"
+  SITE: "moinscafe_site_v8",
+  CLOUD_CFG: "moinscafe_cloud_cfg_v1"
 };
+const SHARED_DATA_URL = "moins-cafe-data.json";
+
 const DEFAULT_SITE = {
   cafeName: "Moin's Cafe",
   whatsapp: "256749632497",
@@ -351,21 +383,319 @@ const DEFAULT_MENU = [
   { id:"h2", name:"Spiced African Masala Tea", category:"Coffee & Hot Drinks", price:8000, desc:"Aromatic black tea simmered with fresh ginger, cardamom, cinnamon & milk.", img:"https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?auto=format&fit=crop&w=900&q=85" }
 ];
 
-let siteSettings = Object.assign({}, DEFAULT_SITE, JSON.parse(localStorage.getItem(STORAGE_KEYS.SITE) || "{}"));
-let categories = JSON.parse(localStorage.getItem(STORAGE_KEYS.CATS)) || structuredClone(DEFAULT_CATEGORIES);
-let menuItems = JSON.parse(localStorage.getItem(STORAGE_KEYS.MENU)) || structuredClone(DEFAULT_MENU);
-let adminPassword = localStorage.getItem(STORAGE_KEYS.PASS) || "271024k";
-let cart = JSON.parse(localStorage.getItem(STORAGE_KEYS.CART)) || {};
+let siteSettings = structuredClone(DEFAULT_SITE);
+let categories = structuredClone(DEFAULT_CATEGORIES);
+let menuItems = structuredClone(DEFAULT_MENU);
+let adminPassword = "271024k";
+let cart = {};
+
+let sharedDataLoaded = false;
+let sharedDataError = "";
+let dataSourceMode = "defaults"; // cloud | shared-file | local | defaults
+
+let cloudConfig = null;
+let cloudEnabled = false;
+let cloudConnected = false;
+let cloudError = "";
+let firebaseAppInstance = null;
+let firebaseDbRef = null;
+let firebaseUnsubscribe = null;
+let isApplyingRemote = false;
+let cloudSaveTimer = null;
 
 function formatUGX(n){ return "UGX " + Number(n||0).toLocaleString("en-UG"); }
 function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
-function showToast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove("show"),2200); }
-function saveState(){
-  localStorage.setItem(STORAGE_KEYS.CATS, JSON.stringify(categories));
-  localStorage.setItem(STORAGE_KEYS.MENU, JSON.stringify(menuItems));
-  localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(cart));
-  localStorage.setItem(STORAGE_KEYS.SITE, JSON.stringify(siteSettings));
+function showToast(msg){ const t=document.getElementById("toast"); if(!t) return; t.textContent=msg; t.classList.add("show"); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove("show"),2600); }
+
+function getEffectiveCloudConfig(){
+  if(EMBEDDED_FIREBASE_CONFIG && typeof EMBEDDED_FIREBASE_CONFIG === "object") return EMBEDDED_FIREBASE_CONFIG;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.CLOUD_CFG);
+    if(!raw) return null;
+    const cfg = JSON.parse(raw);
+    return (cfg && typeof cfg === "object") ? cfg : null;
+  } catch(e){ return null; }
 }
+
+function buildPublishPayload(){
+  return {
+    version: 8,
+    updatedAt: new Date().toISOString(),
+    categories,
+    menu: menuItems,
+    site: siteSettings
+  };
+}
+
+function applyLoadedData(data){
+  if(!data || typeof data !== "object") return false;
+  if(Array.isArray(data.categories) && data.categories.length) categories = data.categories;
+  if(Array.isArray(data.menu)) menuItems = data.menu;
+  if(data.site && typeof data.site === "object") siteSettings = Object.assign({}, DEFAULT_SITE, data.site);
+  return true;
+}
+
+function loadLocalDraftOrDefaults(){
+  let hasLocal = false;
+  try {
+    const s = JSON.parse(localStorage.getItem(STORAGE_KEYS.SITE) || "null");
+    const c = JSON.parse(localStorage.getItem(STORAGE_KEYS.CATS) || "null");
+    const m = JSON.parse(localStorage.getItem(STORAGE_KEYS.MENU) || "null");
+    if(s && typeof s === "object"){ siteSettings = Object.assign({}, DEFAULT_SITE, s); hasLocal = true; }
+    if(Array.isArray(c) && c.length){ categories = c; hasLocal = true; }
+    if(Array.isArray(m)){ menuItems = m; hasLocal = true; }
+  } catch(e) { console.warn("Local draft load failed", e); }
+  return hasLocal;
+}
+
+async function loadSharedFileData(){
+  sharedDataLoaded = false;
+  sharedDataError = "";
+  try {
+    const resp = await fetch(SHARED_DATA_URL + "?v=" + Date.now(), { cache: "no-store" });
+    if(resp.ok){
+      const data = await resp.json();
+      applyLoadedData(data);
+      sharedDataLoaded = true;
+      dataSourceMode = "shared-file";
+      try { localStorage.setItem(STORAGE_KEYS.SITE, JSON.stringify(siteSettings)); } catch(e){}
+      try { localStorage.setItem(STORAGE_KEYS.CATS, JSON.stringify(categories)); } catch(e){}
+      try { localStorage.setItem(STORAGE_KEYS.MENU, JSON.stringify(menuItems)); } catch(e){}
+      return true;
+    }
+    sharedDataError = `Shared data file not found (${resp.status}).`;
+  } catch(e) {
+    sharedDataError = "Shared data file could not be loaded.";
+  }
+  return false;
+}
+
+function refreshAllViews(){
+  applySiteSettings();
+  buildCarousel();
+  updateCartBar();
+  renderMenuModalContent();
+  renderCartModalContent();
+  renderPublishStatus();
+  if(!document.getElementById("adminDashboardModal")?.hidden){
+    renderAdminPrices();
+    renderAdminCategories();
+  }
+}
+
+function persistData(){
+  // Always keep cart local per device
+  try { localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(cart)); } catch(e) {}
+
+  // If instant cloud sync is active, write shared data to cloud (all devices update instantly)
+  if(cloudEnabled && firebaseDbRef){
+    scheduleCloudSave();
+    return;
+  }
+
+  // Otherwise save local draft/cache on this device
+  try { localStorage.setItem(STORAGE_KEYS.CATS, JSON.stringify(categories)); } catch(e) { console.warn("Save categories failed", e); }
+  try { localStorage.setItem(STORAGE_KEYS.MENU, JSON.stringify(menuItems)); } catch(e) { console.warn("Save menu failed", e); showToast("Saved in memory, but local draft may be too large for browser storage."); }
+  try { localStorage.setItem(STORAGE_KEYS.SITE, JSON.stringify(siteSettings)); } catch(e) { console.warn("Save site failed", e); }
+}
+
+function scheduleCloudSave(){
+  if(!cloudEnabled || !firebaseDbRef || isApplyingRemote) return;
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer = setTimeout(async ()=>{
+    try {
+      await firebaseDbRef.set(buildPublishPayload());
+      cloudConnected = true;
+      cloudError = "";
+      dataSourceMode = "cloud";
+      renderPublishStatus();
+    } catch(e){
+      cloudConnected = false;
+      cloudError = (e && e.message) ? e.message : "Cloud save failed";
+      renderPublishStatus();
+      showToast("Cloud save failed. Check Firebase config/rules/internet.");
+      console.error(e);
+    }
+  }, 250);
+}
+
+function initCloudSync(config){
+  cloudError = "";
+  if(!(window.firebase && firebase.apps !== undefined)){
+    cloudEnabled = false; cloudConnected = false;
+    cloudError = "Firebase libraries not loaded.";
+    return false;
+  }
+  try {
+    if(firebaseUnsubscribe){ try{ firebaseUnsubscribe(); }catch(e){} firebaseUnsubscribe = null; }
+    if(firebase.apps.length){
+      // reuse existing default app if config matches name-less usage; simplest: delete and reinit
+      try { firebase.app().delete(); } catch(e) {}
+    }
+    firebaseAppInstance = firebase.initializeApp(config);
+    const db = firebase.database();
+    firebaseDbRef = db.ref(CLOUD_DB_PATH);
+    cloudConfig = config;
+    cloudEnabled = true;
+    firebaseUnsubscribe = firebaseDbRef.on("value", (snap)=>{
+      const val = snap.val();
+      isApplyingRemote = true;
+      try {
+        if(val && typeof val === "object"){
+          applyLoadedData(val);
+          dataSourceMode = "cloud";
+        } else {
+          // First-time cloud DB: seed with current/default data
+          isApplyingRemote = false;
+          scheduleCloudSave();
+        }
+        cloudConnected = true;
+        cloudError = "";
+      } finally {
+        isApplyingRemote = false;
+      }
+      refreshAllViews();
+    }, (err)=>{
+      cloudConnected = false;
+      cloudError = (err && err.message) ? err.message : "Cloud connection error";
+      renderPublishStatus();
+      console.error(err);
+    });
+    return true;
+  } catch(e){
+    cloudEnabled = false; cloudConnected = false;
+    cloudError = (e && e.message) ? e.message : "Failed to initialize Firebase.";
+    console.error(e);
+    return false;
+  }
+}
+
+function disconnectCloudSync(){
+  if(firebaseUnsubscribe){ try{ firebaseUnsubscribe(); }catch(e){} firebaseUnsubscribe = null; }
+  try { if(firebase.apps && firebase.apps.length) firebase.app().delete(); } catch(e){}
+  firebaseAppInstance = null;
+  firebaseDbRef = null;
+  cloudEnabled = false;
+  cloudConnected = false;
+  cloudError = "";
+  try { localStorage.removeItem(STORAGE_KEYS.CLOUD_CFG); } catch(e){}
+  if(!sharedDataLoaded) dataSourceMode = loadLocalDraftOrDefaults() ? "local" : "defaults";
+  renderPublishStatus();
+  showToast("Instant cloud sync disconnected on this device.");
+}
+
+function connectCloudSyncFromForm(){
+  const ta = document.getElementById("firebaseConfigInput");
+  if(!ta) return;
+  let cfg;
+  try { cfg = JSON.parse(ta.value.trim()); } catch(e){ return showToast("Invalid Firebase config JSON."); }
+  if(!cfg || typeof cfg !== "object" || !cfg.apiKey || !cfg.databaseURL){ return showToast("Config must include at least apiKey and databaseURL."); }
+  const ok = initCloudSync(cfg);
+  if(ok){
+    try { localStorage.setItem(STORAGE_KEYS.CLOUD_CFG, JSON.stringify(cfg)); } catch(e){}
+    showToast("Instant sync connected. Embed this config in HTML for all devices.");
+    renderPublishStatus();
+  } else {
+    showToast(cloudError || "Could not connect to Firebase.");
+    renderPublishStatus();
+  }
+}
+
+function copyEmbeddedConfigSnippet(){
+  const cfg = getEffectiveCloudConfig();
+  if(!cfg) return showToast("No Firebase config found. Paste/connect config first.");
+  const line = `const EMBEDDED_FIREBASE_CONFIG = ${JSON.stringify(cfg)};`;
+  navigator.clipboard?.writeText(line).then(()=>{
+    showToast("Embed code copied. Replace the EMBEDDED_FIREBASE_CONFIG line in moins-cafe.html.");
+  }).catch(()=>{
+    const ta = document.getElementById("importDataText");
+    if(ta){ ta.value = line; ta.focus(); ta.select(); }
+    showToast("Could not auto-copy. Embed code placed in the import box.");
+  });
+}
+
+function pushCurrentDataToCloud(){
+  if(!(cloudEnabled && firebaseDbRef)) return showToast("Connect Firebase sync first.");
+  scheduleCloudSave();
+  showToast("Pushing current menu/settings to cloud...");
+}
+
+function getDataSourceLabel(){
+  if(dataSourceMode === "cloud" && cloudEnabled) return cloudConnected ? "Instant Cloud Sync (Firebase, all devices)" : "Instant Cloud Sync (connecting/error)";
+  if(sharedDataLoaded || dataSourceMode === "shared-file") return "Shared published JSON file (all devices, manual updates)";
+  if(dataSourceMode === "local") return "Local draft on this device only";
+  return "Built-in defaults";
+}
+
+function renderPublishStatus(){
+  const box=document.getElementById("publishStatusBox"); if(!box) return;
+  const src=getDataSourceLabel();
+  let badgeClass = "warn", badgeText = "Manual / Local";
+  if(dataSourceMode === "cloud" && cloudConnected){ badgeClass = "ok"; badgeText = "Instant Sync Active"; }
+  else if(dataSourceMode === "cloud" && cloudEnabled && !cloudConnected){ badgeClass = "err"; badgeText = "Cloud Error"; }
+  else if(sharedDataLoaded){ badgeClass = "ok"; badgeText = "Shared File Active"; }
+
+  const cloudMsg = cloudEnabled ? (cloudConnected ? "Connected to Firebase. Changes sync instantly for everyone using this configured site." : `Cloud sync issue: ${escapeHtml(cloudError || "connecting...")}`) : "Firebase instant sync is not enabled. Edits on one device will not automatically appear on other devices unless you use a shared backend.";
+
+  const sharedMsg = sharedDataLoaded ? "Shared JSON file loaded successfully." : (sharedDataError ? escapeHtml(sharedDataError) : "No shared JSON file loaded.");
+  const embedded = EMBEDDED_FIREBASE_CONFIG ? "Yes (built into this HTML file)" : "No (visitors need this configured file or same setup)";
+  const cfg = getEffectiveCloudConfig();
+
+  box.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <div><strong style="color:var(--ink);">Current data source:</strong> ${escapeHtml(src)}</div>
+      <span class="sync-badge ${badgeClass}">${escapeHtml(badgeText)}</span>
+    </div>
+    <div style="margin-top:8px;"><strong style="color:var(--ink);">Menu items:</strong> ${menuItems.length} &nbsp; <strong style="color:var(--ink);">Categories:</strong> ${categories.length}</div>
+    <div style="margin-top:8px;color:var(--muted);"><strong style="color:var(--ink);">Instant cloud:</strong> ${escapeHtml(cloudMsg)}</div>
+    <div style="margin-top:6px;color:var(--muted);"><strong style="color:var(--ink);">Shared JSON fallback:</strong> ${sharedMsg}</div>
+    <div style="margin-top:6px;color:var(--muted);"><strong style="color:var(--ink);">Firebase config embedded in HTML:</strong> ${embedded}</div>
+    ${cfg && cfg.databaseURL ? `<div style="margin-top:6px;color:var(--muted);"><strong style="color:var(--ink);">Database URL:</strong> <code>${escapeHtml(cfg.databaseURL)}</code></div>` : ""}
+  `;
+
+  const fbInput = document.getElementById("firebaseConfigInput");
+  if(fbInput && !fbInput.value.trim() && cfg){ fbInput.value = JSON.stringify(cfg, null, 2); }
+}
+
+/* Manual JSON backup/publish helpers */
+function downloadPublishData(){
+  const payload = buildPublishPayload();
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = SHARED_DATA_URL;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  showToast("Downloaded " + SHARED_DATA_URL);
+}
+async function copyPublishData(){
+  const text = JSON.stringify(buildPublishPayload(), null, 2);
+  try { await navigator.clipboard.writeText(text); showToast("Shared data JSON copied"); }
+  catch(e){ const ta=document.getElementById("importDataText"); if(ta){ ta.value=text; ta.focus(); ta.select(); } showToast("Could not auto-copy. JSON placed in import box."); }
+}
+async function reloadSharedData(){
+  const ok = await loadSharedFileData();
+  if(!ok){ if(!cloudEnabled){ const hasLocal = loadLocalDraftOrDefaults(); dataSourceMode = hasLocal ? "local" : "defaults"; } }
+  refreshAllViews();
+  showToast(ok ? "Reloaded shared JSON file" : "No shared JSON file found.");
+}
+function importPublishDataFromText(){
+  const ta=document.getElementById("importDataText");
+  if(!ta) return;
+  const raw=ta.value.trim();
+  if(!raw) return showToast("Paste JSON first.");
+  try {
+    const data = JSON.parse(raw);
+    applyLoadedData(data);
+    if(cloudEnabled && firebaseDbRef){ scheduleCloudSave(); showToast("Imported and syncing to cloud..."); }
+    else { persistData(); if(sharedDataLoaded) dataSourceMode = "local"; showToast("Imported into editor. Publish/sync to update everyone."); }
+    refreshAllViews();
+  } catch(e) { showToast("Invalid JSON data."); }
+}
+
 function applySiteSettings(){
   document.getElementById("siteName").textContent = siteSettings.cafeName || DEFAULT_SITE.cafeName;
   document.getElementById("siteBadge").textContent = siteSettings.badge || DEFAULT_SITE.badge;
@@ -375,13 +705,8 @@ function applySiteSettings(){
   document.getElementById("siteSubline").innerHTML = sub;
   const logoEl = document.getElementById("siteLogo");
   if(logoEl){
-    if(siteSettings.logoImage){
-      logoEl.innerHTML = `<img src="${escapeHtml(siteSettings.logoImage)}" alt="Logo"/>`;
-      logoEl.style.background = "rgba(247,250,255,0.08)";
-    } else {
-      logoEl.textContent = siteSettings.logoEmoji || DEFAULT_SITE.logoEmoji || "☕";
-      logoEl.style.background = "var(--forest)";
-    }
+    if(siteSettings.logoImage){ logoEl.innerHTML = `<img src="${escapeHtml(siteSettings.logoImage)}" alt="Logo"/>`; logoEl.style.background = "rgba(247,250,255,0.08)"; }
+    else { logoEl.textContent = siteSettings.logoEmoji || DEFAULT_SITE.logoEmoji || "☕"; logoEl.style.background = "var(--forest)"; }
   }
   document.title = `${siteSettings.cafeName || "Moin's Cafe"} | Kampala`;
 }
@@ -464,7 +789,7 @@ requestAnimationFrame(tick);
 let rz; window.addEventListener("resize",()=>{ clearTimeout(rz); rz=setTimeout(buildCarousel,120); });
 
 /* CART */
-function changeQty(id,delta){ const cur=cart[id]||0; const next=Math.max(0,cur+delta); if(next===0) delete cart[id]; else cart[id]=next; saveState(); updateCartBar(); renderMenuModalContent(); renderCartModalContent(); }
+function changeQty(id,delta){ const cur=cart[id]||0; const next=Math.max(0,cur+delta); if(next===0) delete cart[id]; else cart[id]=next; try{localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(cart));}catch(e){} updateCartBar(); renderMenuModalContent(); renderCartModalContent(); }
 function updateCartBar(){
   const entries=Object.entries(cart).filter(([,q])=>q>0);
   const qty=entries.reduce((s,[,q])=>s+q,0);
@@ -484,8 +809,8 @@ function renderMenuModalContent(){
       <div style="display:flex;flex-direction:column;gap:10px;">${items.map(item=>{ const q=cart[item.id]||0; return `
         <div style="display:flex;align-items:center;gap:12px;background:rgba(247,250,255,0.04);border:1px solid var(--line);padding:10px;border-radius:14px;">
           <img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.name)}" style="width:62px;height:62px;border-radius:12px;object-fit:cover;flex:none;"/>
-          <div style="flex:1;min-width:0;"><strong style="display:block;color:var(--white);font-size:.96rem;">${escapeHtml(item.name)}</strong><span style="font-size:.8rem;color:var(--muted);display:block;line-height:1.35;margin-top:2px;">${escapeHtml(item.desc||"")}</span><div style="font-weight:700;color:var(--forest);font-size:.9rem;margin-top:4px;">${formatUGX(item.price)}</div></div>
-          <div class="qty-stepper"><button type="button" class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button><span style="font-weight:700;min-width:20px;text-align:center;color:var(--white);">${q}</span><button type="button" class="qty-btn" onclick="changeQty('${item.id}',1)">+</button></div>
+          <div style="flex:1;min-width:0;"><strong style="display:block;color:var(--ink);font-size:.96rem;">${escapeHtml(item.name)}</strong><span style="font-size:.8rem;color:var(--muted);display:block;line-height:1.35;margin-top:2px;">${escapeHtml(item.desc||"")}</span><div style="font-weight:700;color:var(--forest);font-size:.9rem;margin-top:4px;">${formatUGX(item.price)}</div></div>
+          <div class="qty-stepper"><button type="button" class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button><span style="font-weight:700;min-width:20px;text-align:center;color:var(--ink);">${q}</span><button type="button" class="qty-btn" onclick="changeQty('${item.id}',1)">+</button></div>
         </div>`; }).join("")}</div></div>`;
   }).join("");
   const totalQty=Object.values(cart).reduce((a,b)=>a+b,0);
@@ -499,9 +824,9 @@ function renderCartModalContent(){
   if(!entries.length){ list.innerHTML=`<p style="color:var(--muted);text-align:center;padding:18px 0;">Your cart is empty.</p>`; }
   else {
     list.innerHTML = entries.map(([id,q])=>{ const it=menuItems.find(m=>m.id===id); if(!it) return ""; const sub=it.price*q; total+=sub; return `
-      <div class="cart-row"><div style="flex:1;min-width:0;"><strong style="color:var(--white);">${escapeHtml(it.name)}</strong><br/><small style="color:var(--muted);">${formatUGX(it.price)} each</small></div>
-      <div class="qty-stepper"><button type="button" class="qty-btn" onclick="changeQty('${id}',-1)">−</button><span style="font-weight:700;min-width:20px;text-align:center;color:var(--white);">${q}</span><button type="button" class="qty-btn" onclick="changeQty('${id}',1)">+</button></div>
-      <div style="font-weight:700;min-width:86px;text-align:right;color:var(--white);">${formatUGX(sub)}</div></div>`; }).join("");
+      <div class="cart-row"><div style="flex:1;min-width:0;"><strong style="color:var(--ink);">${escapeHtml(it.name)}</strong><br/><small style="color:var(--muted);">${formatUGX(it.price)} each</small></div>
+      <div class="qty-stepper"><button type="button" class="qty-btn" onclick="changeQty('${id}',-1)">−</button><span style="font-weight:700;min-width:20px;text-align:center;color:var(--ink);">${q}</span><button type="button" class="qty-btn" onclick="changeQty('${id}',1)">+</button></div>
+      <div style="font-weight:700;min-width:86px;text-align:right;color:var(--ink);">${formatUGX(sub)}</div></div>`; }).join("");
   }
   totalEl.textContent = formatUGX(total);
 }
@@ -549,8 +874,15 @@ function switchAdminTab(evt,sec){
   if(sec==="prices") renderAdminPrices();
   if(sec==="categories") renderAdminCategories();
   if(sec==="site") loadSiteSettingsForm();
+  if(sec==="publish") renderPublishStatus();
 }
-function renderAdminDashboard(){ renderAdminPrices(); renderAdminCategories(); loadSiteSettingsForm(); const sel=document.getElementById("newItCat"); if(sel) sel.innerHTML=categories.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join(""); }
+function renderAdminDashboard(){
+  renderAdminPrices();
+  renderAdminCategories();
+  loadSiteSettingsForm();
+  renderPublishStatus();
+  const sel=document.getElementById("newItCat"); if(sel) sel.innerHTML=categories.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+}
 function renderAdminPrices(){
   const tbody=document.getElementById("adminPriceTableBody"); if(!tbody) return;
   tbody.innerHTML = menuItems.map(item=>`
@@ -562,7 +894,7 @@ function renderAdminPrices(){
       <td><button type="button" class="pill-lime" style="height:32px;padding:0 12px;font-size:.75rem;background:#ff4d6d;color:#fff;box-shadow:none;border-radius:8px;" onclick="deleteMenuItem('${item.id}')">Delete</button></td>
     </tr>`).join("");
 }
-function updateItemCat(id,newCat){ const it=menuItems.find(m=>m.id===id); if(it){ it.category=newCat; saveState(); buildCarousel(); renderMenuModalContent(); } }
+function updateItemCat(id,newCat){ const it=menuItems.find(m=>m.id===id); if(it){ it.category=newCat; persistData(); refreshAllViews(); showToast("Category updated"); } }
 function saveAllAdminPrices(){
   menuItems.forEach(item=>{
     const pn=document.getElementById(`adm_price_${item.id}`), nm=document.getElementById(`adm_name_${item.id}`), ds=document.getElementById(`adm_desc_${item.id}`);
@@ -570,7 +902,7 @@ function saveAllAdminPrices(){
     if(nm && nm.value.trim()) item.name=nm.value.trim();
     if(ds) item.desc=ds.value.trim();
   });
-  saveState(); buildCarousel(); renderMenuModalContent(); showToast("Menu saved");
+  persistData(); refreshAllViews(); showToast(cloudConnected ? "Menu saved and synced to all devices" : "Menu saved");
 }
 async function addNewMenuItem(){
   const name=document.getElementById("newItName").value.trim(), category=document.getElementById("newItCat").value;
@@ -581,15 +913,15 @@ async function addNewMenuItem(){
   if(fileInput.files&&fileInput.files[0]) img=await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(fileInput.files[0]); });
   menuItems.unshift({id:"it_"+Date.now(),name,category,price,desc,img});
   document.getElementById("newItName").value=""; document.getElementById("newItPrice").value=""; document.getElementById("newItDesc").value=""; fileInput.value="";
-  saveState(); renderAdminPrices(); buildCarousel(); renderMenuModalContent(); showToast("Item added");
+  persistData(); refreshAllViews(); showToast(cloudConnected ? "Item added and synced to all devices" : "Item added");
 }
-function deleteMenuItem(id){ menuItems=menuItems.filter(m=>m.id!==id); delete cart[id]; saveState(); renderAdminPrices(); buildCarousel(); updateCartBar(); renderMenuModalContent(); showToast("Item deleted"); }
+function deleteMenuItem(id){ menuItems=menuItems.filter(m=>m.id!==id); delete cart[id]; persistData(); refreshAllViews(); showToast(cloudConnected ? "Item deleted and synced to all devices" : "Item deleted"); }
 function renderAdminCategories(){
   const list=document.getElementById("adminCategoryList"); if(!list) return;
-  list.innerHTML = categories.map((cat,idx)=>`<div style="display:flex;align-items:center;justify-content:space-between;background:rgba(247,250,255,0.04);border:1px solid var(--line);padding:10px 14px;border-radius:10px;gap:10px;"><span style="font-weight:600;color:var(--white);">${escapeHtml(cat)}</span><button type="button" class="pill-lime" style="height:32px;padding:0 12px;font-size:.75rem;background:#ff4d6d;color:#fff;box-shadow:none;border-radius:8px;" onclick="deleteCategory(${idx})">Delete</button></div>`).join("");
+  list.innerHTML = categories.map((cat,idx)=>`<div style="display:flex;align-items:center;justify-content:space-between;background:rgba(247,250,255,0.04);border:1px solid var(--line);padding:10px 14px;border-radius:10px;gap:10px;"><span style="font-weight:600;color:var(--ink);">${escapeHtml(cat)}</span><button type="button" class="pill-lime" style="height:32px;padding:0 12px;font-size:.75rem;background:#ff4d6d;color:#fff;box-shadow:none;border-radius:8px;" onclick="deleteCategory(${idx})">Delete</button></div>`).join("");
 }
-function addNewCategory(){ const name=document.getElementById("newCategoryName").value.trim(); if(!name) return showToast("Enter category name."); if(categories.includes(name)) return showToast("Category exists."); categories.push(name); document.getElementById("newCategoryName").value=""; saveState(); renderAdminCategories(); renderAdminDashboard(); buildCarousel(); renderMenuModalContent(); showToast("Category added"); }
-function deleteCategory(idx){ if(categories.length<=1) return showToast("Keep at least one category."); const cat=categories[idx]; categories.splice(idx,1); menuItems.forEach(m=>{ if(m.category===cat) m.category=categories[0]; }); saveState(); renderAdminCategories(); renderAdminDashboard(); buildCarousel(); renderMenuModalContent(); showToast("Category removed"); }
+function addNewCategory(){ const name=document.getElementById("newCategoryName").value.trim(); if(!name) return showToast("Enter category name."); if(categories.includes(name)) return showToast("Category exists."); categories.push(name); document.getElementById("newCategoryName").value=""; persistData(); renderAdminDashboard(); refreshAllViews(); showToast(cloudConnected ? "Category added and synced" : "Category added"); }
+function deleteCategory(idx){ if(categories.length<=1) return showToast("Keep at least one category."); const cat=categories[idx]; categories.splice(idx,1); menuItems.forEach(m=>{ if(m.category===cat) m.category=categories[0]; }); persistData(); renderAdminDashboard(); refreshAllViews(); showToast(cloudConnected ? "Category removed and synced" : "Category removed"); }
 function loadSiteSettingsForm(){
   const s=siteSettings;
   const set=(id,val)=>{ const el=document.getElementById(id); if(el) el.value=val||""; };
@@ -609,10 +941,7 @@ function renderLogoPreview(){
     box.innerHTML = `<span>Using emoji/text logo: <strong style="color:var(--forest);">${escapeHtml(siteSettings.logoEmoji || DEFAULT_SITE.logoEmoji)}</strong></span>`;
   }
 }
-function clearLogoImage(){
-  siteSettings.logoImage = "";
-  saveState(); applySiteSettings(); renderLogoPreview(); buildCarousel(); showToast("Logo image removed");
-}
+function clearLogoImage(){ siteSettings.logoImage = ""; persistData(); refreshAllViews(); renderLogoPreview(); showToast(cloudConnected ? "Logo removed and synced" : "Logo image removed"); }
 function renderSitePhotosPreview(){
   const box=document.getElementById("sitePhotosPreview"); if(!box) return;
   const photos = siteSettings.sitePhotos || [];
@@ -624,15 +953,8 @@ function renderSitePhotosPreview(){
       <button type="button" class="pill-ghost" style="height:28px;width:100%;margin-top:6px;border-radius:8px;font-size:.72rem;" onclick="removeSitePhoto(${idx})">Remove</button>
     </div>`).join("");
 }
-function removeSitePhoto(idx){
-  siteSettings.sitePhotos = (siteSettings.sitePhotos||[]).filter((_,i)=>i!==idx);
-  saveState(); renderSitePhotosPreview(); buildCarousel(); showToast("Photo removed");
-}
-async function handleLogoUpload(file){
-  if(!file) return;
-  siteSettings.logoImage = await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(file); });
-  saveState(); applySiteSettings(); renderLogoPreview(); showToast("Logo image updated");
-}
+function removeSitePhoto(idx){ siteSettings.sitePhotos = (siteSettings.sitePhotos||[]).filter((_,i)=>i!==idx); persistData(); refreshAllViews(); renderSitePhotosPreview(); showToast(cloudConnected ? "Photo removed and synced" : "Photo removed"); }
+async function handleLogoUpload(file){ if(!file) return; siteSettings.logoImage = await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(file); }); persistData(); refreshAllViews(); renderLogoPreview(); showToast(cloudConnected ? "Logo updated and synced" : "Logo image updated"); }
 async function handleSitePhotosUpload(files){
   if(!files || !files.length) return;
   siteSettings.sitePhotos = siteSettings.sitePhotos || [];
@@ -640,9 +962,9 @@ async function handleSitePhotosUpload(files){
     const img = await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(file); });
     siteSettings.sitePhotos.push({img, name:file.name.replace(/\.[^.]+$/,''), category:"Gallery", desc:"Uploaded site photo"});
   }
-  saveState(); renderSitePhotosPreview(); buildCarousel();
+  persistData(); refreshAllViews(); renderSitePhotosPreview();
   const sp=document.getElementById("sitePhotosUpload"); if(sp) sp.value="";
-  showToast("Photos uploaded");
+  showToast(cloudConnected ? "Photos uploaded and synced to all devices" : "Photos uploaded");
 }
 function saveSiteSettings(){
   siteSettings.cafeName = document.getElementById("siteCafeName").value.trim() || DEFAULT_SITE.cafeName;
@@ -653,7 +975,7 @@ function saveSiteSettings(){
   siteSettings.subline = document.getElementById("siteSublineText").value.trim() || DEFAULT_SITE.subline;
   const logoEmoji = document.getElementById("siteLogoEmoji").value.trim();
   siteSettings.logoEmoji = logoEmoji || DEFAULT_SITE.logoEmoji;
-  saveState(); applySiteSettings(); renderLogoPreview(); buildCarousel(); showToast("Site settings saved");
+  persistData(); refreshAllViews(); renderLogoPreview(); showToast(cloudConnected ? "Site settings synced to all devices" : "Site settings saved");
 }
 function updateAdminPassword(){
   const p1=document.getElementById("newPass1").value, p2=document.getElementById("newPass2").value;
@@ -667,9 +989,28 @@ function updateAdminPassword(){
 /* INIT */
 document.getElementById("siteLogoFile")?.addEventListener("change", (e)=>{ const f=e.target.files&&e.target.files[0]; if(f) handleLogoUpload(f); });
 document.getElementById("sitePhotosUpload")?.addEventListener("change", (e)=>{ if(e.target.files && e.target.files.length) handleSitePhotosUpload(e.target.files); });
-applySiteSettings();
-buildCarousel();
-updateCartBar();
+
+(async function initApp(){
+  try { adminPassword = localStorage.getItem(STORAGE_KEYS.PASS) || "271024k"; } catch(e){}
+  try { cart = JSON.parse(localStorage.getItem(STORAGE_KEYS.CART) || "{}"); } catch(e){ cart = {}; }
+
+  const cloudCfg = getEffectiveCloudConfig();
+  if(cloudCfg){
+    initCloudSync(cloudCfg);
+    // If cloud takes time/fails, we still want to show something reasonable:
+    const hadLocal = loadLocalDraftOrDefaults();
+    if(!hadLocal) { /* defaults already set */ }
+    dataSourceMode = "cloud";
+  } else {
+    const ok = await loadSharedFileData();
+    if(!ok){
+      const hadLocal = loadLocalDraftOrDefaults();
+      dataSourceMode = hadLocal ? "local" : "defaults";
+    }
+  }
+
+  refreshAllViews();
+})();
 </script>
 </body>
 </html>
