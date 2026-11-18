@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Moin's Cafe"/>
 <meta name="application-name" content="Moin's Cafe"/>
-<link id="appManifestLink" rel="manifest" href=""/>
+<link id="appManifestLink" rel="manifest" href="manifest.webmanifest"/>
 <link id="appleTouchIconLink" rel="apple-touch-icon" href=""/>
 <title>Moin's Cafe | Kampala Studio Edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -49,13 +49,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; border: 0; background: none; }
 .app { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 20px 4px; flex: 0 0 auto; }
-.brand { display: flex; align-items: center; gap: 10px; font-family: 'Inter Tight', sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--ink); }
-.logo-icon { width: 32px; height: 32px; border-radius: 10px; background: var(--forest); color: #0B1026; display: grid; place-items: center; box-shadow: 0 0 0 4px rgba(204,255,0,0.12); overflow: hidden; font-size: 1rem; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: 'Inter Tight', sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--ink); min-width: 0; }
+.logo-icon { width: 32px; height: 32px; border-radius: 10px; background: var(--forest); color: #0B1026; display: grid; place-items: center; box-shadow: 0 0 0 4px rgba(204,255,0,0.12); overflow: hidden; font-size: 1rem; flex: none; }
 .logo-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .nav-links { display: flex; gap: 18px; align-items: center; font-size: 14px; color: var(--muted); }
 .nav-links a:hover { color: var(--forest); }
-.top-actions { display: flex; gap: 8px; align-items: center; }
-.pill { height: 38px; padding: 0 14px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+.top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.pill { height: 38px; padding: 0 14px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; white-space: nowrap; }
 .pill-ghost { background: rgba(247,250,255,0.06); border: 1px solid var(--line); color: var(--ink); }
 .pill-lime { background: var(--forest); color: #0B1026; box-shadow: 0 8px 24px rgba(204,255,0,0.22); }
 .hero { text-align: center; padding: 0 16px; flex: 0 0 auto; }
@@ -114,21 +114,26 @@ select option { background: #121A33; color: #F7FAFF; }
 @media (max-width: 700px) {
   body { overflow: auto; }
   .app { height: auto; min-height: 100dvh; overflow: visible; }
-  .topbar { padding: 10px 12px 4px; flex-wrap: wrap; gap: 8px; }
-  .brand { font-size: 1.1rem; }
-  .top-actions { width: auto; margin-left: auto; }
-  .pill { height: 36px; padding: 0 12px; font-size: 12px; }
-  .hero { padding: 0 12px; }
+  .topbar { padding: 10px 12px 6px; flex-wrap: wrap; gap: 8px; align-items: flex-start; }
+  .brand { font-size: 1.08rem; flex: 1 1 auto; }
+  .top-actions { width: 100%; margin-left: 0; justify-content: flex-start; gap: 6px; }
+  .top-actions .pill { height: 36px; padding: 0 12px; font-size: 12px; flex: 0 0 auto; }
+  .hero { padding: 2px 12px 0; }
   .mint-badge { font-size: 12px; padding: 6px 12px; }
   .headline { font-size: clamp(28px, 8vw, 40px); margin-top: 6px; }
-  .carousel-stage { flex: 0 0 auto; height: 50vh; min-height: 340px; max-height: 460px; }
-  .carousel-viewport { -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 3%, #000 97%, transparent 100%); mask-image: linear-gradient(to right, transparent 0%, #000 3%, #000 97%, transparent 100%); }
+  .carousel-stage { flex: 0 0 auto; height: 60vh; min-height: 430px; max-height: 560px; padding-top: 2px; }
+  .carousel-viewport { min-height: 320px; -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%); mask-image: linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%); }
+  .carousel-hint { font-size: 11px; bottom: 4px; }
   .subline { font-size: 13.5px; padding: 0 4px; margin-bottom: 8px; }
-  .bottom-bar { padding: 6px 12px 14px; }
-  .pill-cta { width: 100%; min-width: 0; height: 46px; font-size: 13px; }
+  .bottom-bar { padding: 8px 12px 16px; }
+  .pill-cta { width: 100%; min-width: 0; height: 48px; font-size: 14px; }
   .modal-card { padding: 16px 14px; border-radius: 18px; }
   .admin-table { font-size: .8rem; }
   .admin-table th, .admin-table td { padding: 6px 4px; }
+}
+@media (max-width: 420px) {
+  .top-actions .pill { padding: 0 10px; font-size: 11.5px; }
+  .carousel-stage { height: 62vh; min-height: 440px; max-height: 580px; }
 }
 @media (max-height: 760px) and (min-width: 701px) {
   .topbar { padding-top: 6px; }
@@ -755,14 +760,17 @@ function buildCarousel(){
   cardData = buildCarouselData();
   viewport.innerHTML=""; cardElements=[];
   const total = cardData.length || 1;
-  cardWidthPitch = window.innerWidth <= 820 ? 185 : 212;
+  const w = window.innerWidth || 1200;
+  const isPhone = w <= 700;
+  const isSmallPhone = w <= 420;
+  cardWidthPitch = isSmallPhone ? 235 : (isPhone ? 250 : 212);
   totalSpan = total * cardWidthPitch;
   scrollOffset = totalSpan * 0.35; targetOffset = scrollOffset;
   cardData.forEach(dish=>{
     const el=document.createElement("div"); el.className="card-item";
     const priceLabel = dish.isPhoto ? "View Photo" : formatUGX(dish.price);
     el.innerHTML = `<div class="card-inner">
-      <img src="${escapeHtml(dish.img)}" alt="${escapeHtml(dish.name)}" loading="lazy"/>
+      <img src="${escapeHtml(dish.img)}" alt="${escapeHtml(dish.name)}" loading="${isPhone ? "eager" : "lazy"}" decoding="async"/>
       <div class="card-overlay"></div>${dish.isPhoto ? "" : '<div class="add-badge">+</div>'}
       <div class="card-meta"><span class="card-cat">${escapeHtml(dish.category)}</span><div class="card-name">${escapeHtml(dish.name)}</div><div class="card-price">${escapeHtml(priceLabel)}</div></div>
     </div>`;
@@ -792,7 +800,10 @@ function tick(t){
     if(diff>totalSpan/2) targetOffset-=totalSpan;
     if(diff<-totalSpan/2) targetOffset+=totalSpan;
   }
-  const vpW=viewport.clientWidth||1200, centerX=vpW/2, vpH=viewport.clientHeight||420, vCenter=vpH/2, isMobile=window.innerWidth<=820;
+  const vpW=viewport.clientWidth||1200, centerX=vpW/2, vpH=viewport.clientHeight||420, vCenter=vpH/2;
+  const w = window.innerWidth || vpW;
+  const isPhone = w <= 700;
+  const isSmallPhone = w <= 420;
   for(let i=0;i<cardElements.length;i++){
     const card=cardElements[i];
     let base=i*cardWidthPitch-scrollOffset;
@@ -801,12 +812,16 @@ function tick(t){
     const xCenter=centerX+base*push;
     const norm=Math.min(1,Math.abs(xCenter-centerX)/(vpW*0.48));
     const depth=1-norm;
-    const width=(isMobile?150:190)+(isMobile?30:54)*Math.pow(depth,1.6);
-    const height=(isMobile?235:300)+(isMobile?65:115)*Math.pow(depth,1.9);
+    const baseW = isSmallPhone ? 210 : (isPhone ? 230 : 190);
+    const extraW = isSmallPhone ? 55 : (isPhone ? 70 : 54);
+    const baseH = isSmallPhone ? 330 : (isPhone ? 350 : 300);
+    const extraH = isSmallPhone ? 90 : (isPhone ? 105 : 115);
+    const width = baseW + extraW * Math.pow(depth, 1.5);
+    const height = baseH + extraH * Math.pow(depth, 1.8);
     const left=xCenter-width/2, top=vCenter-height/2;
-    const scale=0.86+0.16*Math.pow(depth,1.4);
-    const opacity=0.32+0.68*Math.pow(depth,1.15);
-    const blur=(1-depth)*(isMobile?0.3:0.7);
+    const scale=(isPhone ? 0.9 : 0.86) + (isPhone ? 0.12 : 0.16) * Math.pow(depth, 1.35);
+    const opacity=(isPhone ? 0.45 : 0.32) + (isPhone ? 0.55 : 0.68) * Math.pow(depth, 1.1);
+    const blur=(1-depth)*(isPhone ? 0.12 : 0.7);
     card.style.width=width+"px"; card.style.height=height+"px"; card.style.opacity=opacity.toFixed(3);
     card.style.zIndex=String(Math.round(depth*100)); card.style.filter=blur>0.05?`blur(${blur.toFixed(2)}px)`:"none";
     card.style.transform=`translate3d(${left.toFixed(2)}px,${top.toFixed(2)}px,0) scale(${scale.toFixed(4)})`;
@@ -1023,6 +1038,12 @@ function isAppInstalled(){
 function isIosDevice(){
   return /iphone|ipad|ipod/i.test(navigator.userAgent || "");
 }
+function isAndroidDevice(){
+  return /android/i.test(navigator.userAgent || "");
+}
+function isMobileBrowser(){
+  return isIosDevice() || isAndroidDevice() || /mobile/i.test(navigator.userAgent || "");
+}
 function isSafariOnIos(){
   const ua = navigator.userAgent || "";
   const isIos = /iphone|ipad|ipod/i.test(ua);
@@ -1037,10 +1058,20 @@ function updateInstallButtonVisibility(){
     btn.style.display = "none";
     return;
   }
-  // Show on Android/desktop when browser install prompt is available, or on iOS with instructions.
-  if(deferredInstallPrompt || isIosDevice()){
+  const narrow = (window.innerWidth || 1024) <= 700;
+  // Show when browser install prompt is available, on iOS (Add to Home Screen instructions),
+  // or on Android/mobile as a fallback so users can still get install instructions.
+  if(deferredInstallPrompt || isIosDevice() || isAndroidDevice() || narrow){
     btn.style.display = "inline-flex";
-    btn.textContent = isIosDevice() && !deferredInstallPrompt ? "⬇️ Install App (iPhone/iPad)" : "⬇️ Install App";
+    if(deferredInstallPrompt){
+      btn.textContent = "⬇️ Install App";
+    } else if(isIosDevice()){
+      btn.textContent = narrow ? "⬇️ Install (iOS)" : "⬇️ Install App (iPhone/iPad)";
+    } else if(isAndroidDevice()){
+      btn.textContent = narrow ? "⬇️ Install" : "⬇️ Install App";
+    } else {
+      btn.textContent = "⬇️ Install App";
+    }
   } else {
     btn.style.display = "none";
   }
@@ -1073,7 +1104,11 @@ async function handleInstallAppClick(){
     }
     return;
   }
-  showToast("Install option not available yet. Use your browser menu: Install App / Add to Home Screen.");
+  if(isAndroidDevice()){
+    showToast("To install: open browser menu (⋮) and tap Install app or Add to Home screen.");
+    return;
+  }
+  showToast("To install: use your browser menu and choose Install app or Add to Home screen.");
 }
 
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -1095,45 +1130,30 @@ function setupPWA(){
   const svgIcon = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='108' fill='${bg}'/><rect x='72' y='72' width='368' height='368' rx='92' fill='#121A33' stroke='#CCFF00' stroke-width='18'/><text x='256' y='285' text-anchor='middle' font-size='210' font-family='Arial, sans-serif'>☕</text><text x='256' y='390' text-anchor='middle' font-size='64' font-weight='700' fill='#CCFF00' font-family='Arial, sans-serif'>MOIN'S</text></svg>`;
   const iconDataUrl = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svgIcon);
 
-  const manifest = {
-    name,
-    short_name: shortName,
-    description: "Moin's Cafe menu, ordering, and admin in one installable web app.",
-    start_url: "./",
-    scope: "./",
-    display: "standalone",
-    orientation: "portrait",
-    background_color: bg,
-    theme_color: theme,
-    icons: [
-      { src: iconDataUrl, sizes: "192x192", type: "image/svg+xml", purpose: "any" },
-      { src: iconDataUrl, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
-    ]
-  };
-  try {
-    const blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
-    const manifestUrl = URL.createObjectURL(blob);
-    const link = document.getElementById("appManifestLink");
-    if(link) link.href = manifestUrl;
-  } catch(e) { console.warn("Manifest setup failed", e); }
+  // Use a static manifest file for reliable installability (manifest.webmanifest next to this HTML).
+  const link = document.getElementById("appManifestLink");
+  if(link) link.setAttribute("href", "manifest.webmanifest");
 
   const appleIcon = document.getElementById("appleTouchIconLink");
   if(appleIcon) appleIcon.href = iconDataUrl;
   const appleTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
   if(appleTitle) appleTitle.setAttribute("content", shortName);
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if(themeMeta) themeMeta.setAttribute("content", theme);
 
   if("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1")){
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("./sw.js").then(() => {
         console.log("PWA service worker registered");
       }).catch((err)=>{
-        console.warn("Service worker registration failed (add sw.js next to this HTML for full install/offline support):", err);
+        console.warn("Service worker registration failed (add sw.js and manifest.webmanifest next to this HTML for full install/offline support):", err);
       });
     });
   }
 
   updateInstallButtonVisibility();
   window.matchMedia("(display-mode: standalone)").addEventListener?.("change", updateInstallButtonVisibility);
+  window.addEventListener("resize", updateInstallButtonVisibility);
 }
 
 /* INIT */
